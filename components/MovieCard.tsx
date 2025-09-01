@@ -11,8 +11,8 @@ const MovieCard: React.FC<MovieCardProps> = ({title}) => {
     const router = useRouter();
     return (
         <View style={styles.movieView}>
-            <Text style={styles.title}>{title}</Text>
             <TouchableOpacity onPress={() => { router.push(`/movie/${title}`) }}>
+                <Text style={styles.title}>{title}</Text>
                 <Text style={{ color: "#007BFF", textAlign: "center" }}>View Details</Text>
             </TouchableOpacity>
         </View>
