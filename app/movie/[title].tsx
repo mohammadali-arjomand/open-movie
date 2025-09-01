@@ -1,3 +1,4 @@
+import QualitiesList from "@/components/QualitiesList";
 import SeasonAccordian from "@/components/SeasonAccordian";
 import { loadSeasons } from "@/services/load-movie-data";
 import { Stack, useLocalSearchParams } from "expo-router";
@@ -18,6 +19,10 @@ export default function MovieDetailsScreen() {
     const loadMovieData = () => {
         if (seasons.length === 0) {
             return <Text>Nothing to show</Text>;
+        }
+        
+        if (seasons.length == 1 && seasons[0].season == "0") {
+            return (<ScrollView style={styles.seasonView}><QualitiesList/></ScrollView>);
         }
         return (<ScrollView style={styles.seasonView}>{seasons.map(season => <SeasonAccordian key={season.season} title={title as string} season={season.season} />)}</ScrollView>)
     }    
