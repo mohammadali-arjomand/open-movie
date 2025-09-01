@@ -13,7 +13,7 @@ export default function EpisodesList({title, season}: {title: string, season: st
     return (
         <View>
             {episodes.map(episode => (
-                <View>
+                <View key={episode.episode}>
                     <TouchableOpacity onPress={() => setVisible(true)} key={episode.episode} style={{ padding: 8, borderBottomWidth: 1, borderBottomColor: "#eee" }}>
                        <Text style={styles.listItem}>Episode {episode.episode}</Text>
                     </TouchableOpacity>
