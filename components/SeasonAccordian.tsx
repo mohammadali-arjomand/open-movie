@@ -7,7 +7,6 @@ export default function SeasonAccordian({ season, title }: { season: string, tit
 
     const handlePress = () => setExpanded(!expanded);
 
-    // console.log(season);
     
 
     return (

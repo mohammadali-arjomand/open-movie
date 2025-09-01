@@ -15,7 +15,6 @@ export default function Index() {
     const [results, setResults] = useState<Movie[]>([]);
 
     function showResults() {
-        console.log(results);
         if (results.length === 0) {
             if (searchQuery.length >= 3) {
                 return <Text style={styles.resultContainer}>No results found for "{searchQuery}"</Text>;
