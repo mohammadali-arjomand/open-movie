@@ -23,7 +23,7 @@ export default function EpisodesList({title, season}: {title: string, season: st
                         <Modal visible={selectedItem == episode.episode} onDismiss={() => setSelectedItem('')} contentContainerStyle={{backgroundColor: 'white', padding: 20, margin: 20, borderRadius: 8}}>
                             <Text style={styles.modalTitle}>Season {season} - Episode {episode.episode}</Text>
                             <ScrollView>
-                                <QualitiesList title={title} season={season} episode={episode.episode} />
+                                <QualitiesList title={title} season={season} episode={episode.episode} setSelectedItem={setSelectedItem} />
                             </ScrollView>
                         </Modal>
                     </Portal>

@@ -1,18 +1,39 @@
 import { loadQualities } from "@/services/load-movie-data";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Linking, Text, TouchableOpacity, View } from "react-native";
 
-export default function QualitiesList({title, season, episode}: {title: string, season: string, episode: string}) {
+export default function QualitiesList({title, season, episode, setSelectedItem}: {title: string, season: string, episode: string, setSelectedItem: any}) {
+  const router = useRouter()
+
   const [qualities, setQualities] = useState<{quality: string, language: string, url: string}[]>([]);
   useEffect(() => {
     loadQualities(title, season, episode).then(qualities => setQualities(qualities || []));
   }, [])
   
+  const openUrl = (url: string) => {
+    setSelectedItem('')
+    Linking.canOpenURL(`vlc://${url}`)
+      .then((supported) => {
+        if (supported) {
+          Linking.openURL(`vlc://${url}`)
+        }
+        else {
+          Alert.alert(
+            "VLC is Required", 
+            "VLC Player is not installed. Please install VLC to play this video."
+          )
+        }
+      })
+      .catch((err) => {
+        console.error("> " + err)
+      })
+  }
 
   return (
     <View>
         {qualities.length > 0 ? qualities.map(quality => (
-            <TouchableOpacity key={quality.url} onPress={() => alert(quality.url)}>
+            <TouchableOpacity key={quality.url} onPress={() => openUrl(quality.url)}>
                <Text style={styles.listItem}>{quality.quality} ({quality.language == 'sub' ? 'Subtitle' : (quality.language == 'dub' ? 'Dubbed' : 'Trailer')})</Text>
             </TouchableOpacity>
         )) : <Text>Loading...</Text>}
