@@ -3,7 +3,7 @@ import { getDocumentAsync } from 'expo-document-picker'
 import { copyAsync, deleteAsync, documentDirectory, getInfoAsync, makeDirectoryAsync } from "expo-file-system"
 import { router, Stack } from "expo-router"
 import { useState } from "react"
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 
 export default function databasesSettings() {
 
@@ -78,7 +78,7 @@ export default function databasesSettings() {
 
 
     return (
-        <View>
+        <ScrollView>
             <Stack.Screen options={{headerTitle:"Databases"}}/>
             {!fullDb ?
             <View>
@@ -94,7 +94,7 @@ export default function databasesSettings() {
                     <Text style={styles.removeBtn}>Remove Imported Database</Text>
                 </TouchableOpacity>
             </View>}
-        </View>
+        </ScrollView>
     )
 }
 
