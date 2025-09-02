@@ -1,5 +1,5 @@
 import { initDB } from "./database";
-
+import { Alert } from "react-native";
 
 type Season = {
     season: string,
@@ -49,7 +49,7 @@ async function loadSeasons(title: string) {
         return parseSeasons(rows);
     }
     catch (error) {
-        alert("Error in loading seasons")
+        Alert.alert("Error", "Error in loading seasons")
         return []
     }
     
@@ -66,14 +66,12 @@ async function loadEpisodes(title: string, season: string) {
         return parseEpisodes(rows);
     }
     catch (error) {
-        alert("Error in loading episodes")
+        Alert.alert("Error", "Error in loading episodes")
         return []
     }
 }
 
 async function loadQualities(title: string, season: string, episode: string) {
-    console.log(`looking for ${title} season ${season} episode ${episode}`);
-    
     const db = await initDB()
     try {
         const rows = await db.getAllAsync(
@@ -84,7 +82,7 @@ async function loadQualities(title: string, season: string, episode: string) {
         return parseQualities(rows)
     }
     catch (error) {
-        alert("Error in loading qualities")
+        Alert.alert("Error", "Error in loading qualities")
         return []
     }
 }

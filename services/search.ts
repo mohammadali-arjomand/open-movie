@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { initDB } from "./database";
 
 type Movie = {
@@ -21,7 +22,7 @@ export async function search(query: string) {
         return parseMovies(await rows);
     }
     catch (error) {
-        alert("Error in loading results")
+        Alert.alert("Error", "Error in loading results")
     }
     
 }
