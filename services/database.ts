@@ -1,6 +1,6 @@
 import { Asset } from "expo-asset";
 import { copyAsync, documentDirectory, getInfoAsync, makeDirectoryAsync } from "expo-file-system";
-import { openDatabaseAsync } from "expo-sqlite";
+import { openDatabaseAsync, SQLiteDatabase } from "expo-sqlite";
 
 async function activeDbName(): Promise<string> {
     const fileInfo = await getInfoAsync(documentDirectory + "SQLite/movies.db")
@@ -9,6 +9,9 @@ async function activeDbName(): Promise<string> {
     }
     return "movies-mini.db"
 }
+
+let db: SQLiteDatabase | null = null;
+let currentDbName: string | null = null;
 
 async function initDB() {
     const dbName = "movies-mini.db"
@@ -25,12 +28,20 @@ async function initDB() {
             to: dbPath,
         })
     }
-    let db
+    if (db != null && currentDbName == await activeDbName()) {
+        return db
+    }
+    else {
+        currentDbName = await activeDbName()
+    }
     if (await activeDbName() == "movies-mini.db") {
-        db = await openDatabaseAsync(dbName);
+        db = await openDatabaseAsync(dbName)
+        console.log("Connecting to database...");
+        
     }
     else {
         db = await openDatabaseAsync(await activeDbName())
+        console.log("Connecting to database...");
     }
     return db;
 }
