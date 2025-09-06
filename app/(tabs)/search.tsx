@@ -1,7 +1,7 @@
 import MovieCard from "@/components/MovieCard";
 import { Stack } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { search } from "../../services/search";
 
 type Movie = {
@@ -16,15 +16,16 @@ export default function Index() {
 
     function showResults() {
         if (results.length === 0) {
-            if (searchQuery.length >= 3) {
-                return <Text style={styles.resultContainer}>No results found for "{searchQuery}"</Text>;
-            }
-            else if (searchQuery.length > 0) {
-                return <Text style={styles.resultContainer}>Search query should be more than 2 characters</Text>;
-            }
-            else {
-                return <Text style={styles.resultContainer}>Search series and movies</Text>
-            }
+            // if (searchQuery.length >= 3) {
+            //     return <Text style={styles.resultContainer}>No results found for "{searchQuery}"</Text>;
+            // }
+            // else if (searchQuery.length > 0) {
+            //     return <Text style={styles.resultContainer}>Search query should be more than 2 characters</Text>;
+            // }
+            // else {
+            //     return <Text style={styles.resultContainer}>Search series and movies</Text>
+            // }
+            return null
         }
         return <ScrollView style={styles.resultContainer}>
             {results.map(movie => (
@@ -38,10 +39,10 @@ export default function Index() {
     return (
         <View style={styles.container}>
             <Stack.Screen options={{ headerTitle: "Search" }} />
-            <TextInput style={styles.searchInput} placeholder="Search ..." onChangeText={q => {setSearchQuery(q); search(q).then(movies => setResults(movies || []))}} />
-            {/* <TouchableOpacity style={styles.searchBtn} onPress={() => search(searchQuery).then(movies => setResults(movies || []))}>
+            <TextInput style={styles.searchInput} placeholder="Search ..." onChangeText={q => setSearchQuery(q)} />
+            <TouchableOpacity style={styles.searchBtn} onPress={() => search(searchQuery).then(movies => setResults(movies || []))}>
                 <Text style={{ color: "#fff", fontSize: 16 }}>Search</Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
             {showResults()}
         </View>
     );
@@ -88,6 +89,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 2,
-        maxHeight: "90%",
+        maxHeight: "78%",
     }
 })
