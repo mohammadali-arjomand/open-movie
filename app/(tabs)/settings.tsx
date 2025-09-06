@@ -1,7 +1,7 @@
 import { useThemeColor } from "@/theme/useThemeColor";
 import { useRouter } from "expo-router";
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
-export default function Home() {
+export default function Settings() {
     const router = useRouter();
 
     const styles = StyleSheet.create({

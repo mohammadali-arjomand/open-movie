@@ -19,7 +19,7 @@ export default function TabLayout() {
                 options={{
                     title: "Home",
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="home" color={color} size={size} />
+                        <Ionicons name="home-outline" color={color} size={size} />
                     ),
                 }}
             />
@@ -28,7 +28,16 @@ export default function TabLayout() {
                 options={{
                     title: "Search",
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="search" color={color} size={size} />
+                        <Ionicons name="search-outline" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="bookmarks"
+                options={{
+                    title: "Bookmarks",
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="bookmark-outline" color={color} size={size} />
                     ),
                 }}
             />
@@ -37,7 +46,7 @@ export default function TabLayout() {
                 options={{
                     title: "Settings",
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="settings" color={color} size={size} />
+                        <Ionicons name="settings-outline" color={color} size={size} />
                     ),
                 }}
             />
