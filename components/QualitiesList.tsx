@@ -21,7 +21,20 @@ export default function QualitiesList({title, season, episode, setSelectedItem}:
         else {
           Alert.alert(
             "VLC is Required", 
-            "VLC Player is not installed. Please install VLC to play this video."
+            "VLC Player is not installed. Please install VLC to play this video.",
+            [
+              {
+                text: "Cancel",
+                style: "cancel"
+              },
+              {
+                text: "Install",
+                style: "default",
+                onPress: () => {
+                  Linking.openURL("https://play.google.com/store/apps/details?id=org.videolan.vlc")
+                }
+              }
+            ]
           )
         }
       })

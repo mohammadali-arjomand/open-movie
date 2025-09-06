@@ -1,5 +1,5 @@
+import Toast from "react-native-root-toast";
 import { initDB } from "./database";
-import { Alert } from "react-native";
 
 type Season = {
     season: string,
@@ -49,7 +49,7 @@ async function loadSeasons(title: string) {
         return parseSeasons(rows);
     }
     catch (error) {
-        Alert.alert("Error", "Error in loading seasons")
+        Toast.show("Error in loading seasons", {duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM})
         return []
     }
     
@@ -66,7 +66,7 @@ async function loadEpisodes(title: string, season: string) {
         return parseEpisodes(rows);
     }
     catch (error) {
-        Alert.alert("Error", "Error in loading episodes")
+        Toast.show("Error in loading episodes", {duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM})
         return []
     }
 }
@@ -82,7 +82,7 @@ async function loadQualities(title: string, season: string, episode: string) {
         return parseQualities(rows)
     }
     catch (error) {
-        Alert.alert("Error", "Error in loading qualities")
+        Toast.show("Error in loading qualities", {duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM})
         return []
     }
 }

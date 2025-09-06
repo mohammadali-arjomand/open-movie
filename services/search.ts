@@ -1,4 +1,4 @@
-import { Alert } from "react-native";
+import Toast from "react-native-root-toast";
 import { initDB } from "./database";
 
 type Movie = {
@@ -22,7 +22,7 @@ export async function search(query: string) {
         return parseMovies(await rows);
     }
     catch (error) {
-        Alert.alert("Error", "Error in loading results")
+        Toast.show("Error in loading results", {duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM})
     }
     
 }

@@ -4,6 +4,7 @@ import { copyAsync, deleteAsync, documentDirectory, getInfoAsync, makeDirectoryA
 import { router, Stack } from "expo-router"
 import { useState } from "react"
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import Toast from "react-native-root-toast"
 
 export default function databasesSettings() {
 
@@ -27,11 +28,11 @@ export default function databasesSettings() {
                     from: result.assets[0].uri,
                     to: dbPath
                 })
-                Alert.alert("Imported!", "New database imported successfully!")
+                Toast.show("New database imported successfully!", {duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM})
                 router.back()
             }
             else {
-                Alert.alert("Error", "Error in loading database")
+                Toast.show("Error in loading database", {duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM})
             }
         }
         catch (err) {
@@ -60,11 +61,11 @@ export default function databasesSettings() {
                             const fileInfo = await getInfoAsync(dbPath)
                             if (fileInfo.exists) {
                                 await deleteAsync(dbPath)
-                                Alert.alert("Removed", "Imported database removed successfully")
+                                Toast.show("Imported database removed successfully", {duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM})
                                 router.back()
                             }
                             else {
-                                Alert.alert("Not Found", "Database not found!")
+                                Toast.show("Database not found!", {duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM})
                             }
                         }
                         catch (err) {
