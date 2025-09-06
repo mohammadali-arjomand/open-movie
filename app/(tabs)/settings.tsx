@@ -1,9 +1,26 @@
+import { useThemeColor } from "@/theme/useThemeColor";
 import { useRouter } from "expo-router";
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 export default function Home() {
     const router = useRouter();
+
+    const styles = StyleSheet.create({
+        container: {
+            backgroundColor: useThemeColor("background")
+        },
+        listItem: {
+            fontSize: 24,
+            paddingVertical: 20,
+            borderBottomWidth: 1,
+            borderBottomColor: useThemeColor("border"),
+            paddingHorizontal: 8,
+            color: useThemeColor("text")
+
+        },
+    })
+
     return (
-        <ScrollView>
+        <ScrollView style={styles.container}>
             <TouchableOpacity onPress={() => router.push("/settings/databases")}>
                 <Text style={styles.listItem}>Databases</Text>
             </TouchableOpacity>
@@ -16,13 +33,3 @@ export default function Home() {
         </ScrollView>
     )
 }
-
-const styles = StyleSheet.create({
-    listItem: {
-        fontSize: 24,
-        paddingVertical: 20,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-        paddingHorizontal: 8,
-    },
-})

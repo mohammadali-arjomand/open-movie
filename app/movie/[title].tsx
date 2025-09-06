@@ -1,6 +1,7 @@
 import QualitiesList from "@/components/QualitiesList";
 import SeasonAccordian from "@/components/SeasonAccordian";
 import { loadSeasons } from "@/services/load-movie-data";
+import { useThemeColor } from "@/theme/useThemeColor";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
@@ -11,6 +12,33 @@ type Season = {
 
 export default function MovieDetailsScreen() {
     const {title} = useLocalSearchParams();
+
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: useThemeColor("background"),
+        },  
+        title: {
+            fontSize: 24,
+            fontWeight: "bold",
+            textAlign: "center",
+            marginTop: 20,
+        },
+        seasonView: {
+            margin: 16,
+            backgroundColor: useThemeColor("background2"),
+            borderRadius: 8,
+            // padding: 8,
+            borderColor: useThemeColor("border"),
+            borderWidth: 0.5,
+            shadowColor: useThemeColor("shadow"),
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 2,
+            maxHeight: "100%",   
+        }
+    })
 
     const [seasons, setSeasons] = useState<Season[]>([]);
 
@@ -36,28 +64,3 @@ export default function MovieDetailsScreen() {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#f5f5f5",
-    },  
-    title: {
-        fontSize: 24,
-        fontWeight: "bold",
-        textAlign: "center",
-        marginTop: 20,
-    },
-    seasonView: {
-        margin: 16,
-        backgroundColor: "#fff",
-        borderRadius: 8,
-        padding: 8,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
-        maxHeight: "100%",   
-    }
-})

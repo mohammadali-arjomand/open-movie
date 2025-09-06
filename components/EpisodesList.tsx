@@ -1,4 +1,5 @@
 import { loadEpisodes } from "@/services/load-movie-data";
+import { useThemeColor } from "@/theme/useThemeColor";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Modal, Portal } from "react-native-paper";
@@ -10,17 +11,34 @@ export default function EpisodesList({title, season}: {title: string, season: st
         loadEpisodes(title, season).then(episodes => setEpisodes(episodes || []));
     }, [])
 
+    const styles = StyleSheet.create({
+        listTouchableItem: { padding: 8, borderBottomWidth: 1, borderBottomColor: useThemeColor("border") },
+        listItem: {
+            fontSize: 16,
+            color: useThemeColor("text"),
+            borderBottomColor: useThemeColor("border"),
+            paddingVertical: 8,
+        },
+        modal: {backgroundColor: useThemeColor("background2"), padding: 20, margin: 20, borderRadius: 8},
+        modalTitle: {
+            fontSize: 18,
+            fontWeight: "bold",
+            marginBottom: 12,
+            color: useThemeColor("text")
+        },
+    })
+
     const [selectedItem, setSelectedItem] = useState<string>('');
 
     return (
         <View>
             {episodes.map(episode => (
                 <View key={`${title}-s${season}-e${episode.episode}`}>
-                    <TouchableOpacity onPress={() => setSelectedItem(`${season}-${episode.episode}`)} key={`${title}-s${season}-e${episode.episode}-button`} style={{ padding: 8, borderBottomWidth: 1, borderBottomColor: "#eee" }}>
+                    <TouchableOpacity onPress={() => setSelectedItem(`${season}-${episode.episode}`)} key={`${title}-s${season}-e${episode.episode}-button`} style={styles.listTouchableItem}>
                        <Text style={styles.listItem}>Episode {episode.episode}</Text>
                     </TouchableOpacity>
                     <Portal key={`${title}-s${season}-e${episode.episode}-modal`}>
-                        <Modal visible={selectedItem == `${season}-${episode.episode}`} onDismiss={() => setSelectedItem('')} contentContainerStyle={{backgroundColor: 'white', padding: 20, margin: 20, borderRadius: 8}}>
+                        <Modal contentContainerStyle={styles.modal} visible={selectedItem == `${season}-${episode.episode}`} onDismiss={() => setSelectedItem('')}>
                             <Text style={styles.modalTitle}>Season {season} - Episode {episode.episode}</Text>
                             <ScrollView>
                                 <QualitiesList title={title} season={season} episode={episode.episode} setSelectedItem={setSelectedItem} />
@@ -32,16 +50,3 @@ export default function EpisodesList({title, season}: {title: string, season: st
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    listItem: {
-        fontSize: 16,
-        color: "#333",
-        paddingVertical: 8,
-    },
-    modalTitle: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginBottom: 12,
-    }
-})

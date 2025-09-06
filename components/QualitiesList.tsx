@@ -1,7 +1,8 @@
 import { loadQualities } from "@/services/load-movie-data";
+import { useThemeColor } from "@/theme/useThemeColor";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Linking, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Linking, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function QualitiesList({title, season, episode, setSelectedItem}: {title: string, season: string, episode: string, setSelectedItem: any}) {
   const router = useRouter()
@@ -43,6 +44,17 @@ export default function QualitiesList({title, season, episode, setSelectedItem}:
       })
   }
 
+    const styles = StyleSheet.create({
+        listItem: {
+            fontSize: 16,
+            borderBottomWidth: 1,
+            borderBottomColor: useThemeColor("border"),
+            color: useThemeColor("text"),
+            paddingVertical: 16,
+            paddingHorizontal: 6,
+        }
+    })
+
   return (
     <View>
         {qualities.length > 0 ? qualities.map(quality => (
@@ -52,13 +64,4 @@ export default function QualitiesList({title, season, episode, setSelectedItem}:
         )) : <Text>Loading...</Text>}
     </View>
   );
-}
-
-const styles = {
-      listItem: {
-        fontSize: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: "#eee",
-        paddingVertical: 16,
-    }
 }

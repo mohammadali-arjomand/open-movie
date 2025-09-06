@@ -1,4 +1,5 @@
 import { activeDbName } from "@/services/database"
+import { useThemeColor } from "@/theme/useThemeColor"
 import { getDocumentAsync } from 'expo-document-picker'
 import { copyAsync, deleteAsync, documentDirectory, getInfoAsync, makeDirectoryAsync } from "expo-file-system"
 import { router, Stack } from "expo-router"
@@ -11,6 +12,43 @@ export default function databasesSettings() {
     const [fullDb, setFullDb] = useState<boolean>(false)
 
     activeDbName().then(dbName => setFullDb(dbName == "movies.db"))
+
+    const styles = StyleSheet.create({
+        warnText: {
+            padding: 8,
+            fontSize: 20,
+            color: useThemeColor("warning"),
+        },
+        successText: {
+            padding: 8,
+            fontSize: 20,
+            color: useThemeColor("success")
+        },
+        importBtn: {
+            backgroundColor: useThemeColor("primary"),
+            color: 'white',
+            padding: 8,
+            fontSize: 20,
+            borderRadius: 8,
+            margin: 10,
+            textAlign: 'center'
+        },
+        removeBtn: {
+            backgroundColor: "#ff0000ff",
+            color: 'white',
+            padding: 8,
+            fontSize: 20,
+            borderRadius: 8,
+            margin: 10,
+            textAlign: 'center'
+        },
+        container: {
+            backgroundColor: useThemeColor("background")
+        },
+        header: {
+            backgroundColor: useThemeColor("background2"),
+        }
+    })
 
     const importDatabase = async () => {
         try {
@@ -79,8 +117,8 @@ export default function databasesSettings() {
 
 
     return (
-        <ScrollView>
-            <Stack.Screen options={{headerTitle:"Databases"}}/>
+        <ScrollView style={styles.container}>
+            <Stack.Screen options={{headerTitle:"Databases", headerStyle: styles.header, headerTintColor: useThemeColor("text")}}/>
             {!fullDb ?
             <View>
                 <Text style={styles.warnText}>WARNING: You're using demo edition of database! Please import full edition</Text>
@@ -98,34 +136,3 @@ export default function databasesSettings() {
         </ScrollView>
     )
 }
-
-const styles = StyleSheet.create({
-    warnText: {
-        padding: 8,
-        fontSize: 20,
-        color: '#ffb300ff'
-    },
-    successText: {
-        padding: 8,
-        fontSize: 20,
-        color: '#1a8f00ff'
-    },
-    importBtn: {
-        backgroundColor: "#007BFF",
-        color: 'white',
-        padding: 8,
-        fontSize: 20,
-        borderRadius: 8,
-        margin: 10,
-        textAlign: 'center'
-    },
-    removeBtn: {
-        backgroundColor: "#ff0000ff",
-        color: 'white',
-        padding: 8,
-        fontSize: 20,
-        borderRadius: 8,
-        margin: 10,
-        textAlign: 'center'
-    }
-})
