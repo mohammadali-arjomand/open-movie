@@ -15,12 +15,12 @@ export default function EpisodesList({title, season}: {title: string, season: st
     return (
         <View>
             {episodes.map(episode => (
-                <View key={episode.episode}>
-                    <TouchableOpacity onPress={() => setSelectedItem(episode.episode)} key={episode.episode} style={{ padding: 8, borderBottomWidth: 1, borderBottomColor: "#eee" }}>
+                <View key={`${title}-s${season}-e${episode.episode}`}>
+                    <TouchableOpacity onPress={() => setSelectedItem(`${season}-${episode.episode}`)} key={`${title}-s${season}-e${episode.episode}-button`} style={{ padding: 8, borderBottomWidth: 1, borderBottomColor: "#eee" }}>
                        <Text style={styles.listItem}>Episode {episode.episode}</Text>
                     </TouchableOpacity>
-                    <Portal key={season + episode.episode}>
-                        <Modal visible={selectedItem == episode.episode} onDismiss={() => setSelectedItem('')} contentContainerStyle={{backgroundColor: 'white', padding: 20, margin: 20, borderRadius: 8}}>
+                    <Portal key={`${title}-s${season}-e${episode.episode}-modal`}>
+                        <Modal visible={selectedItem == `${season}-${episode.episode}`} onDismiss={() => setSelectedItem('')} contentContainerStyle={{backgroundColor: 'white', padding: 20, margin: 20, borderRadius: 8}}>
                             <Text style={styles.modalTitle}>Season {season} - Episode {episode.episode}</Text>
                             <ScrollView>
                                 <QualitiesList title={title} season={season} episode={episode.episode} setSelectedItem={setSelectedItem} />

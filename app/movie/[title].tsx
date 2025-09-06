@@ -26,7 +26,7 @@ export default function MovieDetailsScreen() {
         if (seasons.length == 1 && seasons[0].season == "0") {
             return (<ScrollView style={styles.seasonView}><QualitiesList title={title as string} season="0" episode="0" setSelectedItem={(a: string) => { return a }} /></ScrollView>);
         }
-        return (<ScrollView style={styles.seasonView}>{seasons.map(season => <SeasonAccordian key={season.season} title={title as string} season={season.season} />)}</ScrollView>)
+        return (<ScrollView style={styles.seasonView}>{seasons.map(season => <SeasonAccordian key={`${title}-s${season.season}`} title={title as string} season={season.season} />)}</ScrollView>)
     }    
 
     return (
