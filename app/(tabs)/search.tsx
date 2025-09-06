@@ -90,7 +90,7 @@ export default function Index() {
     return (
         <View style={styles.container}>
             <Stack.Screen options={{ headerTitle: "Search" }} />
-            <TextInput style={styles.searchInput} placeholder="Search ..." onChangeText={q => setSearchQuery(q)} />
+            <TextInput style={styles.searchInput} placeholderTextColor={useThemeColor("text2")} placeholder="Search ..." onChangeText={q => setSearchQuery(q)} />
             <TouchableOpacity style={styles.searchBtn} onPress={() => search(searchQuery).then(movies => setResults(movies || []))}>
                 <Text style={{ color: "#fff", fontSize: 16 }}>Search</Text>
             </TouchableOpacity>
