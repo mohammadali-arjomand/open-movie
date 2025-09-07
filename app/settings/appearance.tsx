@@ -4,6 +4,7 @@ import { Stack } from "expo-router"
 import { useEffect, useState } from "react"
 import { ScrollView, StyleSheet } from "react-native"
 import { Dropdown } from "react-native-paper-dropdown"
+
 export default function informationSettings() {
     const styles = StyleSheet.create({
         container: {
@@ -24,21 +25,14 @@ export default function informationSettings() {
     const [theme, setTheme] = useState<string>("system")
 
     useEffect(() => {
-        const loadTheme = async () => {
-            try {
-                const value = await AsyncStorage.getItem("theme")
-                if (value != null) setTheme(value)
-            }
-            catch (err) {
-                console.error(err);
-                
-            }
-        }
-        loadTheme()
+        AsyncStorage.getItem("theme").then((data) => {
+            setTheme(data as unknown as string)
+        })
     }, [])
 
-    function changeTheme() {
-        AsyncStorage.setItem("theme", theme).then(() => alert("done"))
+    function changeTheme(t: string) {
+        setTheme(t)
+        AsyncStorage.setItem("theme", t)
     }
 
     return (
@@ -51,7 +45,7 @@ export default function informationSettings() {
                 menuContentStyle={{backgroundColor: useThemeColor("background"), borderRadius: 8}}
                 hideMenuHeader
                 value={theme}
-                onSelect={(t: any) => {setTheme(t); changeTheme()}}
+                onSelect={(t: any) => {changeTheme(t)}}
             />
         </ScrollView>
     )

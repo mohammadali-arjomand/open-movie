@@ -1,5 +1,6 @@
 export const themes = {
     light: {
+        name: "light",
         background: "#f9f9f9",
         background2: "#ffffff",
         text: "#000000",
@@ -13,6 +14,7 @@ export const themes = {
         danger: "#ff0000",
     },
     dark: {
+        name: "dark",
         background: "#111111",
         background2: "#222222",
         text: "#FFFFFF",
