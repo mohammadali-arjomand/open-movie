@@ -1,5 +1,5 @@
 import { useThemeColor } from "@/theme/useThemeColor";
-import { ScrollView, StyleSheet, Text } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function Bookmarks() {
     const styles = StyleSheet.create({
@@ -10,7 +10,9 @@ export default function Bookmarks() {
 
     return (
         <ScrollView style={styles.container}>
-            <Text style={{color: useThemeColor("text")}}>Welcome to BOOKMARKS</Text>
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={{color: useThemeColor("text"), textAlign: 'center', marginVertical: 20}}>This feature will be released in upcoming versions!</Text>
+            </View>
         </ScrollView>
     )
 }
