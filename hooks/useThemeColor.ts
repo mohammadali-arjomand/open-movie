@@ -7,6 +7,17 @@ export function useThemeColor(key: ThemeKey) {
     const [color, setColor] = useState<string>("#00000000")
 
     async function loadColor() {
+        if (key == "primary") {
+            const savedPrimary = await AsyncStorage.getItem("primary")                  
+            if (savedPrimary == null) {
+                AsyncStorage.setItem("primary", themes.light.primary)
+                return themes.light.primary
+            }
+            else {                
+                return savedPrimary
+            }
+
+        }
         const scheme = useColorScheme() as ThemeName | null
         const theme = themes[scheme || "light"]
 

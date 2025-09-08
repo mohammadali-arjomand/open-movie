@@ -22,7 +22,15 @@ export default function informationSettings() {
         { label: "Dark", value: "dark"},
     ]
 
+    const primaryColorOptions = [
+        { label: "Blue (Default)", value: "#007BFF"},
+        { label: "Green", value: "green"},
+        { label: "Red", value: "red"},
+        { label: "Tomato", value: "tomato"},
+    ]
+
     const [theme, setTheme] = useState<string>("system")
+    const [primaryColor, setPrimaryColor] = useState<string>("#007BFF")
 
     useEffect(() => {
         AsyncStorage.getItem("theme").then((data) => {
@@ -30,9 +38,20 @@ export default function informationSettings() {
         })
     }, [])
 
+    useEffect(() => {
+        AsyncStorage.getItem("primary").then((data) => {
+            setPrimaryColor(data as unknown as string)
+        })
+    }, [])
+
     function changeTheme(t: string) {
         setTheme(t)
         AsyncStorage.setItem("theme", t)
+    }
+
+    function changePrimaryColor(t: string) {
+        setPrimaryColor(t)
+        AsyncStorage.setItem("primary", t)
     }
 
     return (
@@ -52,6 +71,12 @@ export default function informationSettings() {
                 options={themeOptions}
                 value={theme}
                 onSelect={t => changeTheme(t)}
+            />
+            <DropOption
+                label="Primary Color"
+                options={primaryColorOptions}
+                value={primaryColor}
+                onSelect={t => changePrimaryColor(t)}
             />
         </ScrollView>
     )
