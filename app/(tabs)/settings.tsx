@@ -27,9 +27,9 @@ export default function Settings() {
             {/* <TouchableOpacity onPress={() => router.push("/settings/downloads")}>
                 <Text style={styles.listItem}>Downloads</Text>
             </TouchableOpacity> */}
-            {/* <TouchableOpacity onPress={() => router.push("/settings/appearance")}>
+            <TouchableOpacity onPress={() => router.push("/settings/appearance")}>
                 <Text style={styles.listItem}>Appearance</Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => router.push("/settings/information")}>
                 <Text style={styles.listItem}>Information</Text>
             </TouchableOpacity>

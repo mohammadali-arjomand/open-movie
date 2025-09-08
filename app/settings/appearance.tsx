@@ -1,15 +1,15 @@
+import DropOption from "@/components/DropOption"
 import { useThemeColor } from "@/hooks/useThemeColor"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Stack } from "expo-router"
 import { useEffect, useState } from "react"
 import { ScrollView, StyleSheet } from "react-native"
-import { Dropdown } from "react-native-paper-dropdown"
 
 export default function informationSettings() {
     const styles = StyleSheet.create({
         container: {
             backgroundColor: useThemeColor("background"),
-            padding: 16,
+            // padding: 16,
         },
         header: {
             backgroundColor: useThemeColor("background2")
@@ -38,7 +38,7 @@ export default function informationSettings() {
     return (
         <ScrollView style={styles.container}>
             <Stack.Screen options={{headerTitle:"Appearance", headerStyle: styles.header, headerTintColor: useThemeColor("text")}}/>
-            <Dropdown
+            {/* <Dropdown
                 label="Theme"
                 mode="outlined"
                 options={themeOptions}
@@ -46,6 +46,12 @@ export default function informationSettings() {
                 hideMenuHeader
                 value={theme}
                 onSelect={(t: any) => {changeTheme(t)}}
+            /> */}
+            <DropOption
+                label="Theme"
+                options={themeOptions}
+                value={theme}
+                onSelect={t => changeTheme(t)}
             />
         </ScrollView>
     )
