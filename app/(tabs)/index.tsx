@@ -42,14 +42,14 @@ export default function Home() {
                 <Text style={styles.link}>- How to import?</Text>
             </TouchableOpacity>
 
-            <Text style={styles.header}>Quick Access</Text>
+            {/* <Text style={styles.header}>Quick Access</Text>
 
             <TouchableOpacity onPress={() => router.push("/movie/Breaking Bad")}>
                 <Text style={styles.link}>Breaking Bad</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => router.push("/movie/Twin Peaks")}>
                 <Text style={styles.link}>Twin Peaks</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </ScrollView>
     )
 }

@@ -18,7 +18,8 @@ export default function informationSettings() {
             color: useThemeColor("text"),
         },
         link: {
-            color: useThemeColor("primary")
+            color: useThemeColor("primary"),
+            padding: 8
         },
         container: {
             backgroundColor: useThemeColor("background")
@@ -34,7 +35,8 @@ export default function informationSettings() {
             <Text style={styles.title}>About App</Text>
             <Text style={styles.body}>Open Movie is an application for browsing movies and series when you're offline.</Text>
             <Text style={styles.title}>Contact Us</Text>
-            <Text style={styles.body}>You can follow us in Telegram. <TouchableOpacity onPress={() => openURL("https://t.me/OpenMovieApp")}><Text style={styles.link}>Click here to open Telegram!</Text></TouchableOpacity></Text>
+            <Text style={styles.body}>You can follow us in Telegram. In our channel you can send private messages directly to the developer</Text>
+            <TouchableOpacity onPress={() => openURL("https://t.me/OpenMovieApp")}><Text style={styles.link}>- Click here to open Telegram!</Text></TouchableOpacity>
         </ScrollView>
     )
 }
