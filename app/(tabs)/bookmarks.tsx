@@ -41,7 +41,8 @@ export default function Bookmarks() {
             textAlign: 'center',
             marginTop: 30,
             marginHorizontal: 'auto',
-            maxWidth: "80%"
+            maxWidth: "80%",
+            color: useThemeColor("text")
         },
     })
 

@@ -53,7 +53,7 @@ export default function MovieDetailsScreen() {
             marginTop: 30,
             marginHorizontal: 'auto',
             maxWidth: "80%",
-
+            color: useThemeColor("text")
         },
     })
 
@@ -76,7 +76,7 @@ export default function MovieDetailsScreen() {
 
     return (
         <View style={styles.container}>
-            <Stack.Screen options={{ headerTitle: title as string }} />
+            <Stack.Screen options={{ headerTitle: title as string, headerStyle: {backgroundColor: useThemeColor("background2")}, headerTintColor: useThemeColor("text") }} />
             <View style={styles.buttonsView}>
                 <TouchableOpacity onPress={() => { toggleBookmark(title as string) }}>
                     <Ionicons name={isBookmarked(title as string) ? "bookmark" : "bookmark-outline"} size={23} color={useThemeColor("text")} />
