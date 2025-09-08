@@ -1,4 +1,4 @@
-import { useThemeColor } from "@/theme/useThemeColor";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 

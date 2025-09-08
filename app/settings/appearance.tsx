@@ -1,4 +1,4 @@
-import { useThemeColor } from "@/theme/useThemeColor"
+import { useThemeColor } from "@/hooks/useThemeColor"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Stack } from "expo-router"
 import { useEffect, useState } from "react"

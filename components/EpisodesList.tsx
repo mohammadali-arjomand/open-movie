@@ -1,5 +1,5 @@
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { loadEpisodes } from "@/services/load-movie-data";
-import { useThemeColor } from "@/theme/useThemeColor";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Modal, Portal } from "react-native-paper";

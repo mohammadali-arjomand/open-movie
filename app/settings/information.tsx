@@ -1,4 +1,4 @@
-import { useThemeColor } from "@/theme/useThemeColor"
+import { useThemeColor } from "@/hooks/useThemeColor"
 import { openURL } from "expo-linking"
 import { Stack } from "expo-router"
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native"
@@ -34,7 +34,7 @@ export default function informationSettings() {
             <Text style={styles.title}>About App</Text>
             <Text style={styles.body}>Open Movie is an application for browsing movies and series when you're offline.</Text>
             <Text style={styles.title}>Contact Us</Text>
-            <Text style={styles.body}>You can follow us in telegram. <TouchableOpacity onPress={() => openURL("https://t.me/OpenMovieApp")}><Text style={styles.link}>Click here to open telegram!</Text></TouchableOpacity></Text>
+            <Text style={styles.body}>You can follow us in Telegram. <TouchableOpacity onPress={() => openURL("https://t.me/OpenMovieApp")}><Text style={styles.link}>Click here to open Telegram!</Text></TouchableOpacity></Text>
         </ScrollView>
     )
 }

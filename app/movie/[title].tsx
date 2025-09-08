@@ -1,10 +1,12 @@
 import QualitiesList from "@/components/QualitiesList";
 import SeasonAccordian from "@/components/SeasonAccordian";
+import { useBookmarks } from "@/contexts/BookmarkContext";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { loadSeasons } from "@/services/load-movie-data";
-import { useThemeColor } from "@/theme/useThemeColor";
+import { Ionicons } from "@expo/vector-icons";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type Season = {
     season: string,
@@ -12,6 +14,7 @@ type Season = {
 
 export default function MovieDetailsScreen() {
     const {title} = useLocalSearchParams();
+    const {isBookmarked, toggleBookmark} = useBookmarks()
 
     const styles = StyleSheet.create({
         container: {
@@ -37,7 +40,21 @@ export default function MovieDetailsScreen() {
             shadowRadius: 4,
             elevation: 2,
             maxHeight: "100%",   
-        }
+        },
+        buttonsView: {
+            margin: 16,
+            padding: 8,
+            borderColor: useThemeColor("border"),
+            borderWidth: 1,
+            borderRadius: 8,
+        },
+        message: {
+            textAlign: 'center',
+            marginTop: 30,
+            marginHorizontal: 'auto',
+            maxWidth: "80%",
+
+        },
     })
 
     const [seasons, setSeasons] = useState<Season[]>([]);
@@ -48,7 +65,7 @@ export default function MovieDetailsScreen() {
 
     const loadMovieData = () => {
         if (seasons.length === 0) {
-            return <Text>Nothing to show</Text>;
+            return <Text style={styles.message}>We are not able to find '{title}'. Make sure that you are using complete database.</Text>;
         }
         
         if (seasons.length == 1 && seasons[0].season == "0") {
@@ -60,6 +77,11 @@ export default function MovieDetailsScreen() {
     return (
         <View style={styles.container}>
             <Stack.Screen options={{ headerTitle: title as string }} />
+            <View style={styles.buttonsView}>
+                <TouchableOpacity onPress={() => { toggleBookmark(title as string) }}>
+                    <Ionicons name={isBookmarked(title as string) ? "bookmark" : "bookmark-outline"} size={23} color={useThemeColor("text")} />
+                </TouchableOpacity>
+            </View>
             {loadMovieData()}
         </View>
     )

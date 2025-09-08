@@ -1,5 +1,5 @@
 import MovieCard from "@/components/MovieCard";
-import { useThemeColor } from "@/theme/useThemeColor";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { Stack } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";

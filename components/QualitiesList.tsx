@@ -1,5 +1,5 @@
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { loadQualities } from "@/services/load-movie-data";
-import { useThemeColor } from "@/theme/useThemeColor";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, Linking, StyleSheet, Text, TouchableOpacity, View } from "react-native";

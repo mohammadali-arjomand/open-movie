@@ -1,5 +1,5 @@
+import { useThemeColor } from "@/hooks/useThemeColor"
 import { activeDbName } from "@/services/database"
-import { useThemeColor } from "@/theme/useThemeColor"
 import { getDocumentAsync } from 'expo-document-picker'
 import { copyAsync, deleteAsync, documentDirectory, getInfoAsync, makeDirectoryAsync } from "expo-file-system"
 import { router, Stack } from "expo-router"

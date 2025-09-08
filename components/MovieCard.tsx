@@ -1,4 +1,4 @@
-import { useThemeColor } from "@/theme/useThemeColor";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";

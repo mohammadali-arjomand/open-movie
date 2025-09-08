@@ -1,4 +1,4 @@
-import { useThemeColor } from "@/theme/useThemeColor";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { List } from "react-native-paper";
