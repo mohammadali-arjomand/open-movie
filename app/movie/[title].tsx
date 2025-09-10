@@ -1,12 +1,13 @@
 import QualitiesList from "@/components/QualitiesList";
 import SeasonAccordian from "@/components/SeasonAccordian";
 import { useBookmarks } from "@/contexts/BookmarkContext";
+import usePoster from "@/hooks/usePoster";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loadSeasons } from "@/services/load-movie-data";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type Season = {
     season: string,
@@ -39,14 +40,25 @@ export default function MovieDetailsScreen() {
             shadowOpacity: 0.1,
             shadowRadius: 4,
             elevation: 2,
-            maxHeight: "100%",   
+            maxHeight: "61%",   
         },
-        buttonsView: {
+        headerView: {
+            flex: 1,
+            flexDirection: 'row',
             margin: 16,
             padding: 8,
             borderColor: useThemeColor("border"),
             borderWidth: 1,
             borderRadius: 8,
+            marginTop: 60,
+            flexShrink: 1,
+            maxHeight: 220
+        },
+        headerNestedView: {
+            flex:1,
+            justifyContent: 'flex-end',
+            paddingVertical: 20,
+            maxHeight: 200,
         },
         message: {
             textAlign: 'center',
@@ -76,11 +88,16 @@ export default function MovieDetailsScreen() {
 
     return (
         <View style={styles.container}>
-            <Stack.Screen options={{ headerTitle: title as string, headerStyle: {backgroundColor: useThemeColor("background2")}, headerTintColor: useThemeColor("text") }} />
-            <View style={styles.buttonsView}>
-                <TouchableOpacity onPress={() => { toggleBookmark(title as string) }}>
-                    <Ionicons name={isBookmarked(title as string) ? "bookmark" : "bookmark-outline"} size={23} color={useThemeColor("text")} />
-                </TouchableOpacity>
+            <Stack.Screen options={{headerShown: false}} />
+            <View style={styles.headerView}>
+                <Image source={{ uri: usePoster(title as string)}} style={{width: 130, height: 200, resizeMode: "cover", borderRadius: 8, maxHeight: 200}} />
+                <View style={styles.headerNestedView}>
+                    <TouchableOpacity onPress={() => { toggleBookmark(title as string) }} style={{marginLeft: 8, marginBottom: 8, width: 75}}>
+                        <Ionicons name={isBookmarked(title as string) ? "bookmark" : "bookmark-outline"} size={23} color={useThemeColor("text")} style={{margin:'auto'}} />
+                        <Text style={{textAlign: 'center'}}>Bookmark</Text>
+                    </TouchableOpacity>
+                    <Text style={{fontWeight: 'bold', fontSize: 30, marginHorizontal: 5, textAlign: 'left'}} ellipsizeMode="tail" numberOfLines={3}>{title}</Text>
+                </View>
             </View>
             {loadMovieData()}
         </View>

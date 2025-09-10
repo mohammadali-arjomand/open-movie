@@ -1,7 +1,8 @@
+import usePoster from "@/hooks/usePoster";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type MovieCardProps = {
     title: string,
@@ -20,22 +21,32 @@ const MovieCard: React.FC<MovieCardProps> = ({title}) => {
             // borderWidth: 1,
             borderRadius: 8,
             padding: 10,
+            overflow: 'scroll'
         },
         title: {
             fontSize: 18,
             marginVertical: 10,
-            textAlign: 'center',
+            marginLeft: 5,
+            textAlign: 'left',
             paddingBottom: 5,
             fontWeight: 'bold',
+            minWidth: "80%",
+            maxWidth: "80%",
             color: useThemeColor("text"),
+        },
+        grid: {
+            flex: 1,
+            flexDirection: "row",
         }
     })
 
     return (
         <View style={styles.movieView}>
-            <TouchableOpacity onPress={() => { router.push(`/movie/${title}`) }}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={{ color: useThemeColor("primary"), textAlign: "center" }}>View Details</Text>
+            <TouchableOpacity style={styles.grid} onPress={() => { router.push(`/movie/${title}`) }}>
+                <Image source={{ uri: usePoster(title)}} style={{width: 100, height: 150, resizeMode: "cover", borderRadius: 8}} />
+                <View>
+                    <Text style={styles.title}>{title}</Text>
+                </View>
             </TouchableOpacity>
         </View>
     )
