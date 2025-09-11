@@ -2,7 +2,7 @@ import MovieCard from "@/components/MovieCard";
 import { useBookmarks } from "@/contexts/BookmarkContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Ionicons } from "@expo/vector-icons";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function Bookmarks() {
     const {bookmarks} = useBookmarks()
@@ -16,11 +16,18 @@ export default function Bookmarks() {
         )
         }
         return (
-            <ScrollView style={styles.scrollView}>
-                {bookmarks.toReversed().map((title: string, index: number) => (
-                    <MovieCard key={index} title={title}/>
-                ))}
-            </ScrollView>
+            <View style={styles.scrollView}>
+                <FlatList
+                    data={bookmarks.toReversed()}
+                    keyExtractor={(item,index) => index.toString()}
+                    numColumns={2}
+                    columnWrapperStyle={{justifyContent: 'space-between'}}
+                    renderItem={({item}) => (
+                        <MovieCard title={item} />
+                    )}
+                    contentContainerStyle={{}}
+                />
+            </View>
         )
     }
 
@@ -36,6 +43,7 @@ export default function Bookmarks() {
             backgroundColor: useThemeColor("background2"),
             padding: 8,
             borderRadius: 26,
+            height: "96%"
         },
         message: {
             textAlign: 'center',

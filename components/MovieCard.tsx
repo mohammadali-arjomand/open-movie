@@ -16,17 +16,18 @@ const MovieCard: React.FC<MovieCardProps> = ({title}) => {
         movieView: {
             marginBottom: 10,
             backgroundColor: useThemeColor("background"),
-            // borderColor: useThemeColor("border"),
-            // borderWidth: 1,
             borderRadius: 18,
             padding: 10,
-            overflow: 'scroll'
+            paddingBottom: 0,
+            overflow: 'hidden',
+            width: "49%",
+            height: 270,
         },
         title: {
             fontSize: 18,
             marginVertical: 10,
             marginLeft: 5,
-            textAlign: 'left',
+            textAlign: 'center',
             paddingBottom: 5,
             fontWeight: 'bold',
             minWidth: "80%",
@@ -35,16 +36,17 @@ const MovieCard: React.FC<MovieCardProps> = ({title}) => {
         },
         grid: {
             flex: 1,
-            flexDirection: "row",
+            justifyContent: 'center',
+            alignItems: 'center',
         }
     })
 
     return (
         <View style={styles.movieView}>
             <TouchableOpacity style={styles.grid} onPress={() => { router.push(`/movie/${title}`) }}>
-                <Image source={{ uri: usePoster(title).imageUrl}} style={{width: 100, height: 150, resizeMode: "cover", borderRadius: 8}} />
-                <View>
-                    <Text style={styles.title}>{title}</Text>
+                <Image source={{ uri: usePoster(title).imageUrl}} style={{width: 140, height: 210, marginTop: 0, resizeMode: "cover", borderRadius: 8}} />
+                <View style={{flex:1,justifyContent:'center',alignItems:'center',height:"100%"}}>
+                    <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{title}</Text>
                 </View>
             </TouchableOpacity>
         </View>

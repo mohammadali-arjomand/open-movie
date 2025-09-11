@@ -2,7 +2,7 @@ import MovieCard from "@/components/MovieCard";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Stack } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { search } from "../../services/search";
 
 type Movie = {
@@ -10,8 +10,6 @@ type Movie = {
 }
 
 export default function Index() {
-    // const router = useRouter();
-
     const styles = StyleSheet.create({
         container: { 
             padding: 16,
@@ -52,8 +50,6 @@ export default function Index() {
             backgroundColor: useThemeColor("background2"),
             padding: 16,
             shadowColor: useThemeColor("shadow"),
-            // borderColor: useThemeColor("border"),
-            // borderWidth: 1,
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.1,
             shadowRadius: 4,
@@ -67,22 +63,22 @@ export default function Index() {
 
     function showResults() {
         if (results.length === 0) {
-            // if (searchQuery.length >= 3) {
-            //     return <Text style={styles.resultContainer}>No results found for "{searchQuery}"</Text>;
-            // }
-            // else if (searchQuery.length > 0) {
-            //     return <Text style={styles.resultContainer}>Search query should be more than 2 characters</Text>;
-            // }
-            // else {
-            //     return <Text style={styles.resultContainer}>Search series and movies</Text>
-            // }
             return null
         }
-        return <ScrollView style={styles.resultContainer}>
-            {results.map(movie => (
-                <MovieCard key={movie.title} title={movie.title} />
-            ))}
-        </ScrollView>
+        return  (
+            <View style={styles.resultContainer}>
+                <FlatList
+                    data={results}
+                    keyExtractor={(item,index) => index.toString()}
+                    numColumns={2}
+                    columnWrapperStyle={{justifyContent: 'space-between'}}
+                    renderItem={({item}) => (
+                        <MovieCard key={item.title} title={item.title} />
+                    )}
+                    contentContainerStyle={{}}
+                />
+            </View>
+        )
     }
 
 
