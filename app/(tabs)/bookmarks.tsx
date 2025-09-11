@@ -17,7 +17,7 @@ export default function Bookmarks() {
         }
         return (
             <ScrollView style={styles.scrollView}>
-                {bookmarks.map((title: string, index: number) => (
+                {bookmarks.toReversed().map((title: string, index: number) => (
                     <MovieCard key={index} title={title}/>
                 ))}
             </ScrollView>
@@ -35,7 +35,7 @@ export default function Bookmarks() {
             borderWidth: 0.5,
             backgroundColor: useThemeColor("background2"),
             padding: 8,
-            borderRadius: 8,
+            borderRadius: 26,
         },
         message: {
             textAlign: 'center',

@@ -47,7 +47,7 @@ export default function Index() {
             elevation: 2,
         },
         resultContainer: {
-            borderRadius: 8,
+            borderRadius: 34,
             marginTop: 16,
             backgroundColor: useThemeColor("background2"),
             padding: 16,
