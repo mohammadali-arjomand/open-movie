@@ -38,13 +38,17 @@ export default function informationSettings() {
 
     useEffect(() => {
         AsyncStorage.getItem("theme").then((data) => {
-            setTheme(data as unknown as string)
+            if (data !== null) {
+                setTheme(data as unknown as string)
+            }
         })
     }, [])
 
     useEffect(() => {
         AsyncStorage.getItem("primary").then((data) => {
-            setPrimaryColor(data as unknown as string)
+            if (data !== null) {
+                setPrimaryColor(data as unknown as string)
+            }
         })
     }, [])
 
