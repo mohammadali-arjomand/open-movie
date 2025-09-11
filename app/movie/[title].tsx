@@ -104,14 +104,14 @@ export default function MovieDetailsScreen() {
                     <View style={{flex:1,flexDirection:'row', maxHeight:60, marginLeft: 8, marginBottom: 8}}>
                         <TouchableOpacity onPress={() => { toggleBookmark(title as string) }} style={{width: 75}}>
                             <Ionicons name={isBookmarked(title as string) ? "bookmark" : "bookmark-outline"} size={23} color={useThemeColor("text")} style={{margin:'auto'}} />
-                            <Text style={{textAlign: 'center'}}>Bookmark</Text>
+                            <Text style={{textAlign: 'center', color: useThemeColor("text")}}>Bookmark</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => {id.length > 0 ? openURL("https://imdb.com/title/" + id) : null}} style={{width: 75}}>
                             <Ionicons name="star" size={23} color={useThemeColor("text")} style={{margin:'auto'}} />
-                            <Text style={{textAlign: 'center'}}>{score} / 10</Text>
+                            <Text style={{textAlign: 'center', color: useThemeColor("text")}}>{score} / 10</Text>
                         </TouchableOpacity>
                     </View>
-                    <Text style={{fontWeight: 'bold', fontSize: 30, marginHorizontal: 5, textAlign: 'left'}} ellipsizeMode="tail" numberOfLines={3}>{title}</Text>
+                    <Text style={{fontWeight: 'bold', fontSize: 30, marginHorizontal: 5, textAlign: 'left', color: useThemeColor("text")}} ellipsizeMode="tail" numberOfLines={3}>{title}</Text>
                     <Text style={{marginHorizontal: 5, textAlign: 'left', marginTop: 5}}>
                         {genres.split(", ").map((genre, index) => (
                             <View key={index}>
