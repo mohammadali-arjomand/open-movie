@@ -15,6 +15,9 @@ export default function DropOption({label, options, value, onSelect}: {label: st
         modal: {backgroundColor: useThemeColor("background2"), padding: 20, margin: 20, borderRadius: 8},
     })
 
+    const primary = useThemeColor("primary")
+    const text = useThemeColor("text")
+
     return (
         <View>
 
@@ -27,7 +30,9 @@ export default function DropOption({label, options, value, onSelect}: {label: st
                     <ScrollView>
                         {options.map((item, index) => (
                             <TouchableOpacity key={index} onPress={() => onSelect(item.value)}>
-                                <Text style={{color: useThemeColor("text"), paddingVertical: 16, borderBottomWidth: 0.5, borderColor: useThemeColor("border")}}>{value === item.value ? <Ionicons size={12} name="checkmark"/> : null} {item.label}</Text>
+                                <Text style={{color: value == item.value ? primary : text, paddingVertical: 16, borderBottomWidth: 0.5, borderColor: useThemeColor("border")}}>
+                                    {value === item.value ? <Ionicons size={12} name="checkmark"/> : null} {item.label}
+                                </Text>
                             </TouchableOpacity>
                         ))}
                     </ScrollView>
