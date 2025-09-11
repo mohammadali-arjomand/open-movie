@@ -9,18 +9,21 @@ export default function usePoster(name: string) {
     const [id, setId] = useState<string>("")
 
     const loadData = () => {
-        console.log("Loading " + name + " from IMDb ...");
-        extractPoster(name).then(data => {
-            AsyncStorage.setItem(`poster-${btoa(name)}`, data.image as string)
-            setImageUrl(data.image as string)
-            const scoreRegex = /\d\.\d/
-            const imdbScore = scoreRegex.exec(data.description as string)?.[0]
-            AsyncStorage.setItem(`score-${btoa(name)}`, imdbScore as string)
-            setScore(imdbScore as string)
-            AsyncStorage.setItem(`genres-${btoa(name)}`, data.description?.split("|")[1].trim() as string)
-            setGenres(data.description?.split("|")[1].trim() as string)
-            AsyncStorage.setItem(`imdb-id-${btoa(name)}`, data.id as string)
-            setGenres(data.id as string)
+        AsyncStorage.getItem("imdb").then(value => {
+            if (value == "no") return
+            console.log("Loading " + name + " from IMDb ...");
+            extractPoster(name).then(data => {
+                AsyncStorage.setItem(`poster-${btoa(name)}`, data.image as string)
+                setImageUrl(data.image as string)
+                const scoreRegex = /\d\.\d/
+                const imdbScore = scoreRegex.exec(data.description as string)?.[0]
+                AsyncStorage.setItem(`score-${btoa(name)}`, imdbScore as string)
+                setScore(imdbScore as string)
+                AsyncStorage.setItem(`genres-${btoa(name)}`, data.description?.split("|")[1].trim() as string)
+                setGenres(data.description?.split("|")[1].trim() as string)
+                AsyncStorage.setItem(`imdb-id-${btoa(name)}`, data.id as string)
+                setGenres(data.id as string)
+            })
         })
     }
 

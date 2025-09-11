@@ -1,15 +1,18 @@
+import DropOption from "@/components/DropOption"
 import { useThemeColor } from "@/hooks/useThemeColor"
 import { activeDbName } from "@/services/database"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { getDocumentAsync } from 'expo-document-picker'
 import { copyAsync, deleteAsync, documentDirectory, getInfoAsync, makeDirectoryAsync } from "expo-file-system"
 import { router, Stack } from "expo-router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import Toast from "react-native-root-toast"
 
 export default function databasesSettings() {
 
     const [fullDb, setFullDb] = useState<boolean>(false)
+    const [imdb, setImdb] = useState<string>("yes")
 
     activeDbName().then(dbName => setFullDb(dbName == "movies.db"))
 
@@ -115,10 +118,28 @@ export default function databasesSettings() {
         )
     }
 
+    useEffect(() => {
+        AsyncStorage.getItem("imdb").then(value => {
+            if (value !== null) {
+                setImdb(value as string)
+            }
+        })
+    })
+
+    const changeImdbState = (value: string) => {
+        setImdb(value)
+        AsyncStorage.setItem("imdb", value)
+    }
 
     return (
         <ScrollView style={styles.container}>
             <Stack.Screen options={{headerTitle:"Databases", headerStyle: styles.header, headerTintColor: useThemeColor("text")}}/>
+            <DropOption
+                label="Connect to IMDb"
+                options={[{label: "Yes", value: "yes"}, {label: "No", value: "no"}]}
+                value={imdb}
+                onSelect={changeImdbState}
+            />
             {!fullDb ?
             <View>
                 <Text style={styles.warnText}>WARNING: You're using demo edition of database! Please import full edition</Text>
