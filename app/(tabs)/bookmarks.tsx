@@ -25,7 +25,6 @@ export default function Bookmarks() {
                     renderItem={({item}) => (
                         <MovieCard title={item} />
                     )}
-                    contentContainerStyle={{}}
                 />
             </View>
         )
