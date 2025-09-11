@@ -2,6 +2,8 @@ import { extractPoster } from "@/services/imdb-poster"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useEffect, useState } from "react"
 
+var promises = new Map<string, Promise<any>>()
+
 export default function usePoster(name: string) {
     const [imageUrl, setImageUrl] = useState<string>("https://s34.picofile.com/file/8486872134/poster_placeholder.png")
     const [score, setScore] = useState<string>("?")
@@ -11,8 +13,11 @@ export default function usePoster(name: string) {
     const loadData = () => {
         AsyncStorage.getItem("imdb").then(value => {
             if (value == "no") return
-            console.log("Loading " + name + " from IMDb ...");
-            extractPoster(name).then(data => {
+            if (!promises.has(name)) {
+                promises.set(name, extractPoster(name))
+                console.log("Loading " + name + " from IMDb ...");
+            }
+            promises.get(name)?.then(data => {
                 AsyncStorage.setItem(`poster-${btoa(name)}`, data.image as string)
                 setImageUrl(data.image as string)
                 const scoreRegex = /\d\.\d/
