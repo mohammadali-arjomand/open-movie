@@ -113,11 +113,13 @@ export default function MovieDetailsScreen() {
                     </View>
                     <Text style={{fontWeight: 'bold', fontSize: 30, marginHorizontal: 5, textAlign: 'left', color: useThemeColor("text")}} ellipsizeMode="tail" numberOfLines={3}>{title}</Text>
                     <Text style={{marginHorizontal: 5, textAlign: 'left', marginTop: 5}}>
-                        {genres.split(", ").map((genre, index) => (
-                            <View key={index}>
-                                <Text style={styles.genresItem}>{genre}</Text>
-                            </View>
-                        ))}
+                        {genres.split(", ").map((genre, index) => {
+                            if (genre.length > 0) return (
+                                <View key={index}>
+                                    <Text style={styles.genresItem}>{genre}</Text>
+                                </View>
+                            )
+                        })}
                     </Text>
                 </View>
             </View>
