@@ -3,7 +3,7 @@ import { useThemeColor } from "@/hooks/useThemeColor"
 import { activeDbName } from "@/services/database"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { getDocumentAsync } from 'expo-document-picker'
-import { copyAsync, deleteAsync, documentDirectory, getInfoAsync, makeDirectoryAsync } from "expo-file-system"
+import { copyAsync, deleteAsync, documentDirectory, getInfoAsync, makeDirectoryAsync } from "expo-file-system/legacy"
 import { router, Stack } from "expo-router"
 import { useEffect, useState } from "react"
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
@@ -124,7 +124,7 @@ export default function databasesSettings() {
                 setImdb(value as string)
             }
         })
-    })
+    }, [])
 
     const changeImdbState = (value: string) => {
         setImdb(value)

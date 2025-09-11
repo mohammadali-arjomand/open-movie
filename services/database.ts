@@ -1,5 +1,6 @@
 import { Asset } from "expo-asset";
-import { copyAsync, documentDirectory, getInfoAsync, makeDirectoryAsync } from "expo-file-system";
+import { copyAsync, documentDirectory, getInfoAsync, makeDirectoryAsync } from "expo-file-system/legacy";
+// import { File, Paths, D } from 'expo-file-system';
 import { openDatabaseAsync, SQLiteDatabase } from "expo-sqlite";
 
 async function activeDbName(): Promise<string> {
