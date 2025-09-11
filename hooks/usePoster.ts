@@ -9,6 +9,7 @@ export default function usePoster(name: string) {
     const [id, setId] = useState<string>("")
 
     const loadData = () => {
+        console.log("Loading " + name + " from IMDb ...");
         extractPoster(name).then(data => {
             AsyncStorage.setItem(`poster-${btoa(name)}`, data.image as string)
             setImageUrl(data.image as string)
@@ -24,37 +25,38 @@ export default function usePoster(name: string) {
     }
 
     useEffect(() => {
-        var posterLoaded = false
-        var scoreLoaded = false
-        var genresLoaded = false
-        var idLoaded = false
         AsyncStorage.getItem(`poster-${btoa(name)}`).then(value => {
             if (value !== null) {
                 setImageUrl(value)
-                posterLoaded = true
+            }
+            else {
+                loadData()
             }
         })
         AsyncStorage.getItem(`score-${btoa(name)}`).then(value => {
             if (value !== null) {
                 setScore(value)
-                scoreLoaded = true
+            }
+            else {
+                loadData()
             }
         })
         AsyncStorage.getItem(`genres-${btoa(name)}`).then(value => {
             if (value !== null) {
                 setGenres(value)
-                genresLoaded = true
+            }
+            else {
+                loadData()
             }
         })
         AsyncStorage.getItem(`imdb-id-${btoa(name)}`).then(value => {
             if (value !== null) {
                 setId(value)
-                idLoaded = true
+            }
+            else {
+                loadData()
             }
         })
-        if (!posterLoaded || !scoreLoaded || !genresLoaded) {
-            loadData()
-        }
     })
 
     return {imageUrl, score, genres, id}
