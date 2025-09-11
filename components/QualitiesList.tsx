@@ -1,5 +1,7 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loadQualities } from "@/services/load-movie-data";
+import { Ionicons } from "@expo/vector-icons";
+import { setStringAsync } from 'expo-clipboard';
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, Linking, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -7,6 +9,7 @@ import { Alert, Linking, StyleSheet, Text, TouchableOpacity, View } from "react-
 export default function QualitiesList({title, season, episode, setSelectedItem}: {title: string, season: string, episode: string, setSelectedItem: any}) {
   const router = useRouter()
 
+  const [copiedItem, setCopiedItem] = useState<string>("")
   const [qualities, setQualities] = useState<{quality: string, language: string, url: string}[]>([]);
   useEffect(() => {
     loadQualities(title, season, episode).then(qualities => setQualities(qualities || []));
@@ -52,14 +55,25 @@ export default function QualitiesList({title, season, episode, setSelectedItem}:
             color: useThemeColor("text"),
             paddingVertical: 16,
             paddingHorizontal: 6,
+            flex: 1,
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            alignItems: 'center'
         }
     })
+
+    const copyUrl = (url: string) => setStringAsync(url).then(() => setCopiedItem(url))
 
   return (
     <View>
         {qualities.length > 0 ? qualities.map(quality => (
-            <TouchableOpacity key={quality.url} onPress={() => openUrl(quality.url)}>
-               <Text style={styles.listItem}>{quality.quality} ({quality.language == 'sub' ? 'Subtitle' : (quality.language == 'dub' ? 'Dubbed' : 'Trailer')})</Text>
+            <TouchableOpacity style={styles.listItem} key={quality.url} onPress={() => openUrl(quality.url)}>
+                <Text>
+                    {quality.quality} ({quality.language == 'sub' ? 'Subtitle' : (quality.language == 'dub' ? 'Dubbed' : 'Trailer')})
+                </Text>
+                <TouchableOpacity onPress={() => copyUrl(quality.url)} style={{borderColor: styles.listItem.borderBottomColor, borderWidth:0.5, borderRadius: 8, padding: 5}}>
+                    <Ionicons name={copiedItem === quality.url ? "copy" : "copy-outline"} size={20}/>
+                </TouchableOpacity>
             </TouchableOpacity>
         )) : <Text>Loading...</Text>}
     </View>

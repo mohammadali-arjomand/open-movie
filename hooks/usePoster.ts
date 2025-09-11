@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 
 export default function usePoster(name: string) {
     const [imageUrl, setImageUrl] = useState<string>("https://s34.picofile.com/file/8486872134/poster_placeholder.png")
-    const [score, setScore] = useState<string>("0")
+    const [score, setScore] = useState<string>("?")
     const [genres, setGenres] = useState<string>("")
     const [id, setId] = useState<string>("")
 

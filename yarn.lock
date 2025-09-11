@@ -3398,6 +3398,11 @@ expo-blur@~14.1.5:
   resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-14.1.5.tgz#910712389e19286ccdc136275bf569f427aa05ef"
   integrity sha512-CCLJHxN4eoAl06ESKT3CbMasJ98WsjF9ZQEJnuxtDb9ffrYbZ+g9ru84fukjNUOTtc8A8yXE5z8NgY1l0OMrmQ==
 
+expo-clipboard@^8.0.6:
+  version "8.0.6"
+  resolved "https://registry.yarnpkg.com/expo-clipboard/-/expo-clipboard-8.0.6.tgz#c886b786cd2fd6956d5c2e435fce5d5f57e268f8"
+  integrity sha512-os0EKDL/VFISNBPthSk9AZwzGkde7cZTcSMWg/R3+VnnYCABQBwM88NSm6mMhZgDCSFaHCzwrk7eppCXLFGhqA==
+
 expo-constants@~17.1.7:
   version "17.1.7"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-17.1.7.tgz#35194c1cef51f1ea756333418f1e077be79a012b"
