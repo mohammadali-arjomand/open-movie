@@ -1,6 +1,8 @@
 import { BookmarkProvider } from "@/contexts/BookmarkContext";
+import { LastWatchContext } from "@/contexts/LastWatchContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Stack } from "expo-router";
+import { useState } from "react";
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from "react-native-paper";
 
 export default function RootLayout() {
@@ -14,13 +16,17 @@ export default function RootLayout() {
             onSurface: useThemeColor("text")
         }
     }
+
+    const [lastWatchUpdater, setLastWatchUpdater] = useState(0);
     return (
         <PaperProvider theme={theme}>
             <BookmarkProvider>
-                <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false}} />
-                <Stack.Screen name="movie/[title]" options={{ headerTitle: "Movie Details", headerTintColor: useThemeColor("text"), headerStyle: {backgroundColor: useThemeColor("background2")}}} />
-                </Stack>
+                <LastWatchContext.Provider value={{lastWatchUpdater,setLastWatchUpdater}}>
+                    <Stack>
+                        <Stack.Screen name="(tabs)" options={{ headerShown: false}} />
+                        <Stack.Screen name="movie/[title]" options={{ headerTitle: "Movie Details", headerTintColor: useThemeColor("text"), headerStyle: {backgroundColor: useThemeColor("background2")}}} />
+                    </Stack>
+                </LastWatchContext.Provider>
             </BookmarkProvider>
         </PaperProvider>
     );

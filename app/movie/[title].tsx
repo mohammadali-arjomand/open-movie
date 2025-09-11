@@ -53,7 +53,8 @@ export default function MovieDetailsScreen() {
             borderRadius: 18,
             marginTop: 60,
             flexShrink: 1,
-            maxHeight: 220
+            minHeight: 220,
+            maxHeight: 220,
         },
         headerNestedView: {
             flex:1,

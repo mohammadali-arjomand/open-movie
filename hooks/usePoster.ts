@@ -65,7 +65,7 @@ export default function usePoster(name: string) {
                 loadData()
             }
         })
-    })
+    }, [])
 
     return {imageUrl, score, genres, id}
 }

@@ -1,27 +1,28 @@
+import { LastWatchContext } from "@/contexts/LastWatchContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loadQualities } from "@/services/load-movie-data";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setStringAsync } from 'expo-clipboard';
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Alert, Linking, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function QualitiesList({title, season, episode, setSelectedItem}: {title: string, season: string, episode: string, setSelectedItem: any}) {
-    const router = useRouter()
-
+export default function QualitiesList({title, season, episode, setSelectedItem, nextEpisode}: {title: string, season: string, episode: string, setSelectedItem: any, nextEpisode: boolean}) {
     const [copiedItem, setCopiedItem] = useState<string>("")
     const [qualities, setQualities] = useState<{quality: string, language: string, url: string}[]>([]);
     useEffect(() => {
         loadQualities(title, season, episode).then(qualities => setQualities(qualities || []));
     }, [])
     
-    const openUrl = (url: string) => {
-        
+    const {setLastWatchUpdater} = useContext(LastWatchContext)
+    const openUrl = (quality: any) => {
+        AsyncStorage.setItem("last-watch", JSON.stringify({...quality, title, season, episode, nextEpisode}))
+        setLastWatchUpdater((prev:number) => prev + 1)
         setSelectedItem('')
-        Linking.canOpenURL(`vlc://${url}`)
+        Linking.canOpenURL(`vlc://${quality.url}`)
         .then((supported) => {
             if (supported) {
-            Linking.openURL(`vlc://${url}`)
+            Linking.openURL(`vlc://${quality.url}`)
             }
             else {
             Alert.alert(
@@ -68,7 +69,7 @@ export default function QualitiesList({title, season, episode, setSelectedItem}:
     return (
         <View>
             {qualities.length > 0 ? qualities.map(quality => (
-                <TouchableOpacity style={styles.listItem} key={quality.url} onPress={() => openUrl(quality.url)}>
+                <TouchableOpacity style={styles.listItem} key={quality.url} onPress={() => openUrl(quality)}>
                     <Text>
                         {quality.quality} ({quality.language == 'sub' ? 'Subtitle' : (quality.language == 'dub' ? 'Dubbed' : 'Trailer')})
                     </Text>

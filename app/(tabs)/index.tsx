@@ -1,10 +1,36 @@
+import { LastWatchContext } from "@/contexts/LastWatchContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { openURL } from "expo-linking";
 import { useRouter } from "expo-router";
-import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+// type FullRow = {
+//     quality: string,
+//     language: string,
+//     url: string,
+//     title: string,
+//     season: string,
+//     episode: string,
+// }
 
 export default function Home() {
     const router = useRouter();
+
+    const {lastWatchUpdater} = useContext(LastWatchContext);
+    const [lastWatch, setLastWatch] = useState<any>(null)
+    useEffect(() => {
+        AsyncStorage.getItem("last-watch").then(value => {
+            if (value !== null) {             
+                setLastWatch(JSON.parse(value))
+                console.log("Loading last watch ...")
+            }
+        })
+    }, [lastWatchUpdater])
+
+    console.log(lastWatchUpdater);
+    
 
     const styles = StyleSheet.create({
         container: {
@@ -31,25 +57,27 @@ export default function Home() {
     })
 
     return (
-        <ScrollView style={styles.container}>
-            <Text style={styles.header}>Welcome to Open Movie!</Text>
+        <View style={styles.container}>
+            {
+                lastWatch === null && lastWatch === undefined ?
+                <View>
+                    <Text style={styles.header}>Welcome to Open Movie!</Text>
 
-            <Text style={styles.body}>Download full database from our Telegram channel and import it!</Text>
-            <TouchableOpacity onPress={() => openURL("https://t.me/OpenMovieApp")}>
-                <Text style={styles.link}>- Telegram Channel?</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push("/settings/databases")}>
-                <Text style={styles.link}>- How to import?</Text>
-            </TouchableOpacity>
-
-            {/* <Text style={styles.header}>Quick Access</Text>
-
-            <TouchableOpacity onPress={() => router.push("/movie/Breaking Bad")}>
-                <Text style={styles.link}>Breaking Bad</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push("/movie/Twin Peaks")}>
-                <Text style={styles.link}>Twin Peaks</Text>
-            </TouchableOpacity> */}
-        </ScrollView>
+                    <Text style={styles.body}>Download full database from our Telegram channel and import it!</Text>
+                    <TouchableOpacity onPress={() => openURL("https://t.me/OpenMovieApp")}>
+                        <Text style={styles.link}>- Telegram Channel?</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push("/settings/databases")}>
+                        <Text style={styles.link}>- How to import?</Text>
+                    </TouchableOpacity>
+                </View> :
+                <View>
+                    <Text style={styles.header}>Random Titles!</Text>
+                    <ScrollView style={{height:"100%"}}>
+                        <Text>Loading...</Text>
+                    </ScrollView>
+                </View>
+            }
+        </View>
     )
 }

@@ -41,7 +41,7 @@ export default function EpisodesList({title, season}: {title: string, season: st
                         <Modal contentContainerStyle={styles.modal} visible={selectedItem == `${season}-${episode.episode}`} onDismiss={() => setSelectedItem('')}>
                             <Text style={styles.modalTitle}>Season {season} - Episode {episode.episode}</Text>
                             <ScrollView>
-                                <QualitiesList title={title} season={season} episode={episode.episode} setSelectedItem={setSelectedItem} />
+                                <QualitiesList nextEpisode={episodes[episode.episode as unknown as number] !== undefined} title={title} season={season} episode={episode.episode} setSelectedItem={setSelectedItem} />
                             </ScrollView>
                         </Modal>
                     </Portal>

@@ -16,6 +16,14 @@ type Quality = {
     url: string,
 }
 
+type FullRow = {
+    quality: string,
+    language: string,
+    url: string,
+    title: string,
+    season: string,
+    episode: string,
+}
 
 function parseSeasons(rows: unknown[]): Season[] {
     return rows.map((row: any) => ({
@@ -35,6 +43,17 @@ function parseQualities(rows: unknown[]): Quality[] {
         quality: row.quality,
         language: row.language,
         url: row.url,
+    }))
+}
+
+function parseFullRow(rows: unknown[]): FullRow[] {
+    return rows.map((row: any) => ({
+        quality: row.quality,
+        language: row.language,
+        url: row.url,
+        episode: row.episode,
+        season: row.season,
+        title: row.title
     }))
 }
 
@@ -87,5 +106,21 @@ async function loadQualities(title: string, season: string, episode: string) {
     }
 }
 
-export { loadEpisodes, loadQualities, loadSeasons };
+async function loadQualityByUrl(url:string) {
+    const db = await initDB()
+    try {
+        const row = await db.getAllAsync(
+            "SELECT * FROM files WHERE url=? LIMIT 1",
+            [url]
+        )
+        
+        return parseFullRow(row)[0]
+    }
+    catch (error) {
+        Toast.show("Error in loading full row by url", {duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM})
+        return parseFullRow([])[0]
+    }
+}
+
+export { loadEpisodes, loadQualities, loadQualityByUrl, loadSeasons };
 
