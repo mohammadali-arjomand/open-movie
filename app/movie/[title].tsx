@@ -33,8 +33,7 @@ export default function MovieDetailsScreen() {
         seasonView: {
             margin: 16,
             backgroundColor: useThemeColor("background2"),
-            borderRadius: 8,
-            // padding: 8,
+            borderRadius: 18,
             borderColor: useThemeColor("border"),
             borderWidth: 0.5,
             shadowColor: useThemeColor("shadow"),
@@ -51,7 +50,7 @@ export default function MovieDetailsScreen() {
             padding: 8,
             borderColor: useThemeColor("border"),
             borderWidth: 1,
-            borderRadius: 8,
+            borderRadius: 18,
             marginTop: 60,
             flexShrink: 1,
             maxHeight: 220

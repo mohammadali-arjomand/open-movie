@@ -14,12 +14,11 @@ const MovieCard: React.FC<MovieCardProps> = ({title}) => {
 
     const styles = StyleSheet.create({
         movieView: {
-            paddingVertical: 10,
             marginBottom: 10,
             backgroundColor: useThemeColor("background"),
             // borderColor: useThemeColor("border"),
             // borderWidth: 1,
-            borderRadius: 8,
+            borderRadius: 18,
             padding: 10,
             overflow: 'scroll'
         },
