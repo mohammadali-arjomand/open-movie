@@ -69,6 +69,13 @@ export default function MovieDetailsScreen() {
             maxWidth: "80%",
             color: useThemeColor("text")
         },
+        genresItem: {
+            backgroundColor: useThemeColor("primary"),
+            color: useThemeColor("text3"),
+            borderRadius: 7,
+            padding: 3,
+            margin: 2,
+        }
     })
 
     const [seasons, setSeasons] = useState<Season[]>([]);
@@ -105,7 +112,13 @@ export default function MovieDetailsScreen() {
                         </TouchableOpacity>
                     </View>
                     <Text style={{fontWeight: 'bold', fontSize: 30, marginHorizontal: 5, textAlign: 'left'}} ellipsizeMode="tail" numberOfLines={3}>{title}</Text>
-                    <Text style={{marginHorizontal: 5, textAlign: 'left', marginTop: 5}}>{genres}</Text>
+                    <Text style={{marginHorizontal: 5, textAlign: 'left', marginTop: 5}}>
+                        {genres.split(", ").map((genre, index) => (
+                            <View key={index}>
+                                <Text style={styles.genresItem}>{genre}</Text>
+                            </View>
+                        ))}
+                    </Text>
                 </View>
             </View>
             {loadMovieData()}
