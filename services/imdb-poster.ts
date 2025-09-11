@@ -10,7 +10,10 @@ async function getPoster(id: string) {
 
     const text = await fch.text()
     const {document} = parseHTML(text)
-    return document.querySelector('meta[property=og:image]')?.getAttribute("content")
+    const image = document.querySelector('meta[property=og:image]')?.getAttribute("content")
+    const description = document.querySelector("meta[property=og:title]")?.getAttribute("content")
+
+    return {image, description, id}
 }
 
 async function getId(name: string) {

@@ -43,7 +43,7 @@ const MovieCard: React.FC<MovieCardProps> = ({title}) => {
     return (
         <View style={styles.movieView}>
             <TouchableOpacity style={styles.grid} onPress={() => { router.push(`/movie/${title}`) }}>
-                <Image source={{ uri: usePoster(title)}} style={{width: 100, height: 150, resizeMode: "cover", borderRadius: 8}} />
+                <Image source={{ uri: usePoster(title).imageUrl}} style={{width: 100, height: 150, resizeMode: "cover", borderRadius: 8}} />
                 <View>
                     <Text style={styles.title}>{title}</Text>
                 </View>

@@ -5,6 +5,7 @@ import usePoster from "@/hooks/usePoster";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loadSeasons } from "@/services/load-movie-data";
 import { Ionicons } from "@expo/vector-icons";
+import { openURL } from "expo-linking";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -16,6 +17,7 @@ type Season = {
 export default function MovieDetailsScreen() {
     const {title} = useLocalSearchParams();
     const {isBookmarked, toggleBookmark} = useBookmarks()
+    const {imageUrl, score, genres, id} = usePoster(title as string)
 
     const styles = StyleSheet.create({
         container: {
@@ -90,13 +92,20 @@ export default function MovieDetailsScreen() {
         <View style={styles.container}>
             <Stack.Screen options={{headerShown: false}} />
             <View style={styles.headerView}>
-                <Image source={{ uri: usePoster(title as string)}} style={{width: 130, height: 200, resizeMode: "cover", borderRadius: 8, maxHeight: 200}} />
+                <Image source={{ uri: imageUrl}} style={{width: 130, height: 200, resizeMode: "cover", borderRadius: 8, maxHeight: 200}} />
                 <View style={styles.headerNestedView}>
-                    <TouchableOpacity onPress={() => { toggleBookmark(title as string) }} style={{marginLeft: 8, marginBottom: 8, width: 75}}>
-                        <Ionicons name={isBookmarked(title as string) ? "bookmark" : "bookmark-outline"} size={23} color={useThemeColor("text")} style={{margin:'auto'}} />
-                        <Text style={{textAlign: 'center'}}>Bookmark</Text>
-                    </TouchableOpacity>
+                    <View style={{flex:1,flexDirection:'row', maxHeight:60, marginLeft: 8, marginBottom: 8}}>
+                        <TouchableOpacity onPress={() => { toggleBookmark(title as string) }} style={{width: 75}}>
+                            <Ionicons name={isBookmarked(title as string) ? "bookmark" : "bookmark-outline"} size={23} color={useThemeColor("text")} style={{margin:'auto'}} />
+                            <Text style={{textAlign: 'center'}}>Bookmark</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {id.length > 0 ? openURL("https://imdb.com/title/" + id) : null}} style={{width: 75}}>
+                            <Ionicons name="star" size={23} color={useThemeColor("text")} style={{margin:'auto'}} />
+                            <Text style={{textAlign: 'center'}}>{score} / 10</Text>
+                        </TouchableOpacity>
+                    </View>
                     <Text style={{fontWeight: 'bold', fontSize: 30, marginHorizontal: 5, textAlign: 'left'}} ellipsizeMode="tail" numberOfLines={3}>{title}</Text>
+                    <Text style={{marginHorizontal: 5, textAlign: 'left', marginTop: 5}}>{genres}</Text>
                 </View>
             </View>
             {loadMovieData()}
