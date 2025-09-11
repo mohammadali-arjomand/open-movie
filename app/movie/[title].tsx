@@ -110,7 +110,7 @@ export default function MovieDetailsScreen() {
                             <Text style={{textAlign: 'center', color: useThemeColor("text")}}>{score} / 10</Text>
                         </TouchableOpacity>
                     </View>
-                    <Text style={{fontWeight: 'bold', fontSize: 30, marginHorizontal: 5, textAlign: 'left', color: useThemeColor("text")}} ellipsizeMode="tail" numberOfLines={3}>{title}</Text>
+                    <Text style={{fontWeight: 'bold', fontSize: 30, marginHorizontal: 5, textAlign: 'left', color: useThemeColor("text")}} ellipsizeMode="tail" numberOfLines={2}>{title}</Text>
                     <Text style={{marginHorizontal: 5, textAlign: 'left', marginTop: 5}}>
                         {genres.split(", ").map((genre, index) => {
                             if (genre.length > 0) return (
