@@ -1,10 +1,9 @@
-import { LastWatchContext } from "@/contexts/LastWatchContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loadQualities } from "@/services/load-movie-data";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setStringAsync } from 'expo-clipboard';
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Linking, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function QualitiesList({title, season, episode, setSelectedItem, nextEpisode}: {title: string, season: string, episode: string, setSelectedItem: any, nextEpisode: boolean}) {
@@ -14,11 +13,9 @@ export default function QualitiesList({title, season, episode, setSelectedItem, 
         loadQualities(title, season, episode).then(qualities => setQualities(qualities || []));
     }, [])
     
-    const {setLastWatchUpdater} = useContext(LastWatchContext)
     const openUrl = (quality: any) => {
-        AsyncStorage.setItem("last-watch", JSON.stringify({...quality, title, season, episode, nextEpisode}))
-        setLastWatchUpdater((prev:number) => prev + 1)
         setSelectedItem('')
+        AsyncStorage.setItem("remove-help", "true")
         Linking.canOpenURL(`vlc://${quality.url}`)
         .then((supported) => {
             if (supported) {

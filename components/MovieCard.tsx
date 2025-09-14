@@ -4,12 +4,13 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-type MovieCardProps = {
-    title: string,
-    // navigation: any
-}
+// type MovieCardProps = {
+//     title: string,
+//     horizontaol: boolean
+//     // navigation: any
+// }
 
-const MovieCard: React.FC<MovieCardProps> = ({title}) => {
+function MovieCard({title, horizontal=false}: {title: string, horizontal?: boolean}) {
     const router = useRouter();
 
     const styles = StyleSheet.create({
@@ -20,7 +21,7 @@ const MovieCard: React.FC<MovieCardProps> = ({title}) => {
             padding: 10,
             paddingBottom: 0,
             overflow: 'hidden',
-            width: "49%",
+            width: horizontal ? 160 : "49%",
             height: 270,
         },
         title: {

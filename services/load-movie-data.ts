@@ -1,10 +1,13 @@
 import Toast from "react-native-root-toast";
 import { initDB } from "./database";
 
+type Movie = {
+    title: string,
+}
+
 type Season = {
     season: string,
 }
-
 
 type Episode = {
     episode: string,
@@ -16,13 +19,19 @@ type Quality = {
     url: string,
 }
 
-type FullRow = {
-    quality: string,
-    language: string,
-    url: string,
-    title: string,
-    season: string,
-    episode: string,
+// type FullRow = {
+//     quality: string,
+//     language: string,
+//     url: string,
+//     title: string,
+//     season: string,
+//     episode: string,
+// }
+
+function parseMovies(rows: unknown[]): Movie[] {
+    return rows.map((row: any) => ({
+        title: row.title,
+    }))
 }
 
 function parseSeasons(rows: unknown[]): Season[] {
@@ -46,16 +55,16 @@ function parseQualities(rows: unknown[]): Quality[] {
     }))
 }
 
-function parseFullRow(rows: unknown[]): FullRow[] {
-    return rows.map((row: any) => ({
-        quality: row.quality,
-        language: row.language,
-        url: row.url,
-        episode: row.episode,
-        season: row.season,
-        title: row.title
-    }))
-}
+// function parseFullRow(rows: unknown[]): FullRow[] {
+//     return rows.map((row: any) => ({
+//         quality: row.quality,
+//         language: row.language,
+//         url: row.url,
+//         episode: row.episode,
+//         season: row.season,
+//         title: row.title
+//     }))
+// }
 
 async function loadSeasons(title: string) {
     const db = await initDB()
@@ -106,21 +115,34 @@ async function loadQualities(title: string, season: string, episode: string) {
     }
 }
 
-async function loadQualityByUrl(url:string) {
+// async function loadQualityByUrl(url:string) {
+//     const db = await initDB()
+//     try {
+//         const row = await db.getAllAsync(
+//             "SELECT * FROM files WHERE url=? LIMIT 1",
+//             [url]
+//         )
+        
+//         return parseFullRow(row)[0]
+//     }
+//     catch (error) {
+//         Toast.show("Error in loading full row by url", {duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM})
+//         return parseFullRow([])[0]
+//     }
+// }
+
+async function loadRandomTitles() {
     const db = await initDB()
     try {
-        const row = await db.getAllAsync(
-            "SELECT * FROM files WHERE url=? LIMIT 1",
-            [url]
+        const rows = await db.getAllAsync(
+            "SELECT title FROM files WHERE id IN ( SELECT MIN(id) FROM files GROUP BY title ) ORDER BY RANDOM() LIMIT 6"
         )
-        
-        return parseFullRow(row)[0]
+        return parseMovies(rows)
     }
     catch (error) {
-        Toast.show("Error in loading full row by url", {duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM})
-        return parseFullRow([])[0]
+        console.error("Error in loading random movies:", error);
     }
 }
 
-export { loadEpisodes, loadQualities, loadQualityByUrl, loadSeasons };
+export { loadEpisodes, loadQualities, loadRandomTitles, loadSeasons };
 

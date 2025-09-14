@@ -1,5 +1,4 @@
 import { BookmarkProvider } from "@/contexts/BookmarkContext";
-import { LastWatchContext } from "@/contexts/LastWatchContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Stack } from "expo-router";
 import { useState } from "react";
@@ -17,16 +16,13 @@ export default function RootLayout() {
         }
     }
 
-    const [lastWatchUpdater, setLastWatchUpdater] = useState(0);
     return (
         <PaperProvider theme={theme}>
             <BookmarkProvider>
-                <LastWatchContext.Provider value={{lastWatchUpdater,setLastWatchUpdater}}>
-                    <Stack>
-                        <Stack.Screen name="(tabs)" options={{ headerShown: false}} />
-                        <Stack.Screen name="movie/[title]" options={{ headerTitle: "Movie Details", headerTintColor: useThemeColor("text"), headerStyle: {backgroundColor: useThemeColor("background2")}}} />
-                    </Stack>
-                </LastWatchContext.Provider>
+                <Stack>
+                    <Stack.Screen name="(tabs)" options={{ headerShown: false}} />
+                    <Stack.Screen name="movie/[title]" options={{ headerTitle: "Movie Details", headerTintColor: useThemeColor("text"), headerStyle: {backgroundColor: useThemeColor("background2")}}} />
+                </Stack>
             </BookmarkProvider>
         </PaperProvider>
     );
