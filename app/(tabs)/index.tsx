@@ -80,7 +80,7 @@ export default function Home() {
                     </Text>
                     <FlatList
                         data={randomTitles}
-                        keyExtractor={(_,index) => index.toString()}
+                        keyExtractor={(item) => item.title}
                         horizontal={true}
                         renderItem={({item}) => (
                             <MovieCard title={item.title} horizontal={true} />

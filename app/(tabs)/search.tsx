@@ -69,7 +69,7 @@ export default function Index() {
             <View style={styles.resultContainer}>
                 <FlatList
                     data={results}
-                    keyExtractor={(item,index) => index.toString()}
+                    keyExtractor={(item) => item.title}
                     numColumns={2}
                     columnWrapperStyle={{justifyContent: 'space-between'}}
                     renderItem={({item}) => (

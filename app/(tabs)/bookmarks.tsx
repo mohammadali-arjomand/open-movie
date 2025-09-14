@@ -19,7 +19,7 @@ export default function Bookmarks() {
             <View style={styles.scrollView}>
                 <FlatList
                     data={bookmarks.toReversed()}
-                    keyExtractor={(item,index) => index.toString()}
+                    keyExtractor={(item) => item}
                     numColumns={2}
                     columnWrapperStyle={{justifyContent: 'space-between'}}
                     renderItem={({item}) => (
