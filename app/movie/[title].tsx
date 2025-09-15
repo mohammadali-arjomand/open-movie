@@ -1,6 +1,7 @@
 import QualitiesList from "@/components/QualitiesList";
 import SeasonAccordian from "@/components/SeasonAccordian";
 import { useBookmarks } from "@/contexts/BookmarkContext";
+import { useDownload } from "@/contexts/DownloadContext";
 import usePoster from "@/hooks/usePoster";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loadSeasons } from "@/services/load-movie-data";
@@ -84,15 +85,17 @@ export default function MovieDetailsScreen() {
         loadSeasons(title as string).then(seasons => setSeasons(seasons || []));
     }, [])
 
+    const {addDownload} = useDownload()
+
     const loadMovieData = () => {
         if (seasons.length === 0) {
             return <Text style={styles.message}>We are not able to find '{title}'. Make sure that you are using complete database.</Text>;
         }
         
         if (seasons.length == 1 && seasons[0].season == "0") {
-            return (<ScrollView style={styles.seasonView}><QualitiesList title={title as string} season="0" episode="0" setSelectedItem={(a: string) => { return a }} /></ScrollView>);
+            return (<ScrollView style={styles.seasonView}><QualitiesList addDownload={addDownload} nextEpisode={false} title={title as string} season="0" episode="0" setSelectedItem={(a: string) => { return a }} /></ScrollView>);
         }
-        return (<ScrollView style={styles.seasonView}>{seasons.map(season => <SeasonAccordian key={`${title}-s${season.season}`} title={title as string} season={season.season} />)}</ScrollView>)
+        return (<ScrollView style={styles.seasonView}>{seasons.map(season => <SeasonAccordian addDownload={addDownload} key={`${title}-s${season.season}`} title={title as string} season={season.season} />)}</ScrollView>)
     }    
 
     return (

@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 import { Modal, Portal } from "react-native-paper";
 import QualitiesList from "./QualitiesList";
 
-export default function EpisodesList({title, season}: {title: string, season: string}) {
+export default function EpisodesList({title, season, addDownload}: {title: string, season: string, addDownload: (url: string, filename: string) => void}) {
     const [episodes, setEpisodes] = useState<{episode: string}[]>([]);
     useEffect(() => {
         loadEpisodes(title, season).then(episodes => setEpisodes(episodes || []));
@@ -41,7 +41,7 @@ export default function EpisodesList({title, season}: {title: string, season: st
                         <Modal contentContainerStyle={styles.modal} visible={selectedItem == `${season}-${episode.episode}`} onDismiss={() => setSelectedItem('')}>
                             <Text style={styles.modalTitle}>Season {season} - Episode {episode.episode}</Text>
                             <ScrollView>
-                                <QualitiesList nextEpisode={episodes[episode.episode as unknown as number] !== undefined} title={title} season={season} episode={episode.episode} setSelectedItem={setSelectedItem} />
+                                <QualitiesList addDownload={addDownload} nextEpisode={episodes[episode.episode as unknown as number] !== undefined} title={title} season={season} episode={episode.episode} setSelectedItem={setSelectedItem} />
                             </ScrollView>
                         </Modal>
                     </Portal>

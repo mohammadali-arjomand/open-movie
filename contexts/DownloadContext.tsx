@@ -20,6 +20,7 @@ export interface DownloadItem {
 
 interface DownloadContextProps {
     downloads: DownloadItem[],
+    setDownloads: React.Dispatch<React.SetStateAction<DownloadItem[]>>,
     addDownload: (url: string, filename: string) => void,
     pauseDownload: (id: string) => void,
     resumeDownload: (id: string) => void,
@@ -76,13 +77,16 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
 
             const now = Date.now()
             const last = speedRefs.current[id] || {lastTime : now, lastBytes: 0}
-            const deltaTime = (now - last.lastTime) / 1000 // convert to seconds
-            const deltaByte = downloadProgress.totalBytesWritten - last.lastBytes
-            const speed = deltaTime > 0 ? deltaByte / deltaTime : 0
+            var speed: number
+            if (now - last.lastBytes >= 1000) {
+                const deltaTime = (now - last.lastTime) / 1000 // convert to seconds
+                const deltaByte = downloadProgress.totalBytesWritten - last.lastBytes
+                speed = deltaTime > 0 ? deltaByte / deltaTime : 0
 
-            speedRefs.current[id] = {lastTime : now, lastBytes: downloadProgress.totalBytesWritten}
+                speedRefs.current[id] = {lastTime : now, lastBytes: downloadProgress.totalBytesWritten}
+            }
 
-            setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, progress, status: "downloading", speed} : d))
+            setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, progress, status: "downloading", speed: speed || d.speed} : d))
         })
 
         const newItem: DownloadItem = {
@@ -98,7 +102,7 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
         setDownloads(prev => [...prev, newItem])
 
         DownloadResumable.downloadAsync()
-            .then(() => setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, status: "completed", speed: 0} : d)))
+            .then(() => setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, status: d.progress < 1 ? d.status : "completed", speed: 0} : d)))
             .catch(() => setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, status: "canceled", speed: 0} : d)))
     }
 
@@ -127,7 +131,7 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
     }
 
     return (
-        <DownloadContext.Provider value={{downloads, addDownload, pauseDownload, resumeDownload, cancelDownload}}>
+        <DownloadContext.Provider value={{downloads, addDownload, pauseDownload, resumeDownload, cancelDownload, setDownloads}}>
             {children}
         </DownloadContext.Provider>
     )

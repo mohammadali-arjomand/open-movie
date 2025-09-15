@@ -3,7 +3,7 @@ import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { List } from "react-native-paper";
 import EpisodesList from "./EpisodesList";
-export default function SeasonAccordian({ season, title }: { season: string, title: string }) {
+export default function SeasonAccordian({ addDownload, season, title }: { addDownload: (url: string, filename: string) => void, season: string, title: string }) {
     const [expanded, setExpanded] = useState(false);
 
     const handlePress = () => setExpanded(!expanded);
@@ -33,7 +33,7 @@ export default function SeasonAccordian({ season, title }: { season: string, tit
             onPress={handlePress}
             left={props => <List.Icon {...props} color={styles.title.color} icon="folder" />}
         >
-            <EpisodesList season={season as string} title={title as string} />
+            <EpisodesList addDownload={addDownload} season={season as string} title={title as string} />
         </List.Accordion>
     )
 }

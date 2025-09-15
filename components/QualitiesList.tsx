@@ -1,14 +1,19 @@
+import { DownloadProvider } from "@/contexts/DownloadContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loadQualities } from "@/services/load-movie-data";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setStringAsync } from 'expo-clipboard';
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, Linking, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function QualitiesList({title, season, episode, setSelectedItem, nextEpisode}: {title: string, season: string, episode: string, setSelectedItem: any, nextEpisode: boolean}) {
+export default function QualitiesList({title, season, episode, setSelectedItem, nextEpisode, addDownload}: {title: string, season: string, episode: string, setSelectedItem: any, nextEpisode: boolean, addDownload: (url: string, filename: string) => void}) {
     const [copiedItem, setCopiedItem] = useState<string>("")
     const [qualities, setQualities] = useState<{quality: string, language: string, url: string}[]>([]);
+
+    const router = useRouter()
+
     useEffect(() => {
         loadQualities(title, season, episode).then(qualities => setQualities(qualities || []));
     }, [])
@@ -63,18 +68,34 @@ export default function QualitiesList({title, season, episode, setSelectedItem, 
 
         const copyUrl = (url: string) => setStringAsync(url).then(() => setCopiedItem(url))
 
+    function downloadUrl(quality: {url: string, quality: string, language: string}): void {
+        const filename = `${title} S${season}E${episode} ${quality.quality} ${quality.language == 'sub' ? 'Subtitle' : (quality.language == 'dub' ? 'Dubbed' : 'Trailer')}.${quality.url.split(".").at(-1)}`
+        addDownload(quality.url, filename.replaceAll(" ", "."))
+        setSelectedItem("")
+        router.push("/(tabs)/downloads")
+    }
+
     return (
-        <View>
-            {qualities.length > 0 ? qualities.map(quality => (
-                <TouchableOpacity style={styles.listItem} key={quality.url} onPress={() => openUrl(quality)}>
-                    <Text>
-                        {quality.quality} ({quality.language == 'sub' ? 'Subtitle' : (quality.language == 'dub' ? 'Dubbed' : 'Trailer')})
-                    </Text>
-                    <TouchableOpacity onPress={() => copyUrl(quality.url)} style={{borderColor: styles.listItem.borderBottomColor, borderWidth:0.5, borderRadius: 8, padding: 5}}>
-                        <Ionicons name={copiedItem === quality.url ? "copy" : "copy-outline"} size={20}/>
+        <DownloadProvider>
+            <View>
+                {qualities.length > 0 ? qualities.map(quality => (
+                    <TouchableOpacity style={styles.listItem} key={quality.url} onPress={() => openUrl(quality)}>
+                        <Text style={{maxWidth: "80%"}}>
+                            {quality.quality} ({quality.language == 'sub' ? 'Subtitle' : (quality.language == 'dub' ? 'Dubbed' : 'Trailer')})
+                        </Text>
+                        <View>
+                            <View style={{flex:1, flexDirection:'row'}}>
+                                <TouchableOpacity onPress={() => copyUrl(quality.url)} style={{borderColor: styles.listItem.borderBottomColor, borderWidth:0.5, borderRadius: 8, padding: 5}}>
+                                    <Ionicons name={copiedItem === quality.url ? "copy" : "copy-outline"} size={20}/>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => downloadUrl(quality)} style={{borderColor: styles.listItem.borderBottomColor, borderWidth:0.5, borderRadius: 8, padding: 5, marginLeft: 2}}>
+                                    <Ionicons name="download-outline" size={20}/>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
                     </TouchableOpacity>
-                </TouchableOpacity>
-            )) : <Text>Loading...</Text>}
-        </View>
+                )) : <Text>Loading...</Text>}
+            </View>
+        </DownloadProvider>
     );
 }

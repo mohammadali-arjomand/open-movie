@@ -1,9 +1,9 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ProgressBar } from "react-native-paper";
 
-export default function DownloadCard({title, progress, speed, status="downloading"}: {title: string, progress: number, speed: number, status?: string}) {
+export default function DownloadCard({title, id, progress, speed, pauseDownload, resumeDownload, removeFromList, status="downloading"}: {title: string, id: string, progress: number, speed: number, pauseDownload: (id: string) => void, resumeDownload: (id: string) => void, status?: string, removeFromList: (id: string) => void}) {
     const colors = {
         success: useThemeColor("success"),
         warning: useThemeColor("warning"),
@@ -49,15 +49,46 @@ export default function DownloadCard({title, progress, speed, status="downloadin
             color: useThemeColor("text2")
         }
     })
+
+    const handlePress = () => {
+        if (status === "downloading") {
+            pauseDownload(id)
+        }
+        else if (status === "paused") {
+            resumeDownload(id)
+        }
+    }
+
+    const handleLongPress = () => {
+        if (status !== "downloading") {
+             Alert.alert(
+                'Confirm Remove',
+                'Are you sure that you want to remove ' + title + ' from downloads list?',
+                [
+                    {
+                        text: "Cancel",
+                        style: 'cancel'
+                    },
+                    {
+                        text: "Remove",
+                        style: "destructive",
+                        onPress: async () => {
+                            removeFromList(id)
+                        }
+                    }
+                ]
+            )
+        }
+    }
     return (
         <View style={styles.container}>
-            <TouchableOpacity>
-                <Text style={styles.label}>
+            <TouchableOpacity onPress={handlePress} onLongPress={handleLongPress}>
+                <Text style={styles.label} numberOfLines={1} ellipsizeMode="tail">
                     <Ionicons name={icon} color={color} size={18} />{" "}
                     {title}
                 </Text>
                 <Text style={styles.sublabel}>
-                    {status === "downloading" ? <Text>{progress*100}% - {speed} Mbps - </Text> : null}
+                    {status === "downloading" ? <Text>{(progress*100).toFixed(1)}% - {(speed / (1024*1024)).toFixed(2)} KBps - </Text> : status === "paused" ? <Text>{(progress*100).toFixed(1)}% - </Text> : null}
                     {text}
                 </Text>
                 <ProgressBar progress={progress} color={color} style={{backgroundColor: useThemeColor("border"), borderRadius: 2}} />
