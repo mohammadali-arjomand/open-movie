@@ -4,22 +4,29 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ProgressBar } from "react-native-paper";
 
 export default function DownloadCard({title, progress, speed, status="downloading"}: {title: string, progress: number, speed: number, status?: string}) {
+    const colors = {
+        success: useThemeColor("success"),
+        warning: useThemeColor("warning"),
+        danger: useThemeColor("danger"),
+        primary: useThemeColor("primary")
+    }
+
     var icon : "play-outline" | "pause-outline" | "checkbox-outline" | "close-outline" = "pause-outline"
-    var color = useThemeColor("primary")
+    var color = colors.primary
     var text = "Downloading..."
     if (status == "paused") {
         icon = "play-outline"
-        color = useThemeColor("warning")
+        color = colors.warning
         text = "Paused"
     }
     else if (status == "completed") {
         icon = "checkbox-outline"
-        color = useThemeColor("success")
+        color = colors.success
         text = "Completed"
     }
     else if (status == "canceled") {
         icon = "close-outline"
-        color = useThemeColor("danger")
+        color = colors.danger
         text = "Canceled"
     }
     const styles = StyleSheet.create({
