@@ -12,7 +12,7 @@ export default function downloadsSettings() {
             <Stack.Screen options={{headerTitle:"Downloads"}}/>
             <ScrollView>
                 {downloads.toReversed().map(dl => (
-                    <DownloadCard key={dl.id} title="Test" progress={dl.progress} status={dl.status} speed={1} />
+                    <DownloadCard key={dl.id} title="Test" progress={dl.progress} status={dl.status} speed={dl.speed} />
                 ))}   
             </ScrollView>
             <Button onPress={() => addDownload("https://s34.picofile.com/file/8486872134/poster_placeholder.png", "poster.png")}>Add download</Button>

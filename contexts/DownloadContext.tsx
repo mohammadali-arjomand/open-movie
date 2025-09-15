@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system/legacy';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 
 export type DownloadStatus = 
     | "downloading"
@@ -13,6 +13,7 @@ export interface DownloadItem {
     url: string, 
     fileUri: string,
     progress: number,
+    speed: number, // byte per second
     status: DownloadStatus,
     resumable: FileSystem.DownloadResumable | null
 }
@@ -32,12 +33,14 @@ const STORAGE_KEY = "downloads"
 export const DownloadProvider = ({children}: {children: ReactNode}) => {
     const [downloads, setDownloads] = useState<DownloadItem[]>([])
 
+    const speedRefs = useRef<Record<string, {lastTime: number, lastBytes: number}>>({})
+
     useEffect(() => {
         const loadDownloads = async () => {
             const saved = await AsyncStorage.getItem(STORAGE_KEY)
             if (saved) {
                 const parsed: DownloadItem[] = JSON.parse(saved)
-                const updated: DownloadItem[] = parsed.map(d => d.status === "downloading" ? {...d, status: "paused"} : d)
+                const updated: DownloadItem[] = parsed.map(d => d.status === "downloading" ? {...d, status: "paused", speed: 0} : d)
                 const readyToResume: DownloadItem[] = updated.map(item => {
                     if (item.status === "paused") {
                         const resumable = FileSystem.createDownloadResumable(
@@ -54,7 +57,7 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
                     return item
                 })
                 setDownloads(readyToResume as DownloadItem[])
-
+                readyToResume.forEach(d => speedRefs.current[d.id] = {lastTime: Date.now(), lastBytes: d.progress * 1e6})
             }
         }
         loadDownloads()
@@ -66,10 +69,20 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
 
     const addDownload = (url: string, filename: string) => {
         const fileUri = FileSystem.documentDirectory + filename
+        const id = Date.now().toString()
 
         const DownloadResumable = FileSystem.createDownloadResumable(url, fileUri, {}, (downloadProgress) => {
             const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite
-            setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, progress} : d))
+
+            const now = Date.now()
+            const last = speedRefs.current[id] || {lastTime : now, lastBytes: 0}
+            const deltaTime = (now - last.lastTime) / 1000 // convert to seconds
+            const deltaByte = downloadProgress.totalBytesWritten - last.lastBytes
+            const speed = deltaTime > 0 ? deltaByte / deltaTime : 0
+
+            speedRefs.current[id] = {lastTime : now, lastBytes: downloadProgress.totalBytesWritten}
+
+            setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, progress, status: "downloading", speed} : d))
         })
 
         const newItem: DownloadItem = {
@@ -77,6 +90,7 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
             url, 
             fileUri,
             progress: 0,
+            speed: 0,
             status: "downloading",
             resumable: DownloadResumable
         }
@@ -84,15 +98,15 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
         setDownloads(prev => [...prev, newItem])
 
         DownloadResumable.downloadAsync()
-            .then(() => setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, status: "completed"} : d)))
-            .catch(() => setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, status: "canceled"} : d)))
+            .then(() => setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, status: "completed", speed: 0} : d)))
+            .catch(() => setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, status: "canceled", speed: 0} : d)))
     }
 
     const pauseDownload = (id: string) => {
         const item = downloads.find(d => d.id === id)
         if (item?.resumable && item.status === "downloading") {
             item.resumable.pauseAsync()
-            setDownloads(prev => prev.map(d => d.id === id ? {...d, status: "paused"} : d))
+            setDownloads(prev => prev.map(d => d.id === id ? {...d, status: "paused", speed: 0} : d))
         }
     }
 
@@ -100,7 +114,7 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
         const item = downloads.find(d => d.id === id)
         if (item?.resumable && item.status === "paused") {
             item.resumable.resumeAsync()
-            setDownloads(prev => prev.map(d => d.id === id ? {...d, status: "downloading"} : d))
+            setDownloads(prev => prev.map(d => d.id === id ? {...d, status: "downloading", speed: 0} : d))
         }
     }
 
@@ -108,7 +122,7 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
         const item = downloads.find(d => d.id === id)
         if (item?.resumable) {
             item.resumable.pauseAsync()
-            setDownloads(prev => prev.map(d => d.id === id ? {...d, status: "canceled"} : d))
+            setDownloads(prev => prev.map(d => d.id === id ? {...d, status: "canceled", speed: 0} : d))
         }
     }
 
