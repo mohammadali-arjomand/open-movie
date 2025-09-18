@@ -85,7 +85,7 @@ export default function MovieDetailsScreen() {
         loadSeasons(title as string).then(seasons => setSeasons(seasons || []));
     }, [])
 
-    const {addDownload} = useDownload()
+    const {addDownload, downloads} = useDownload()
 
     const loadMovieData = () => {
         if (seasons.length === 0) {
@@ -93,9 +93,9 @@ export default function MovieDetailsScreen() {
         }
         
         if (seasons.length == 1 && seasons[0].season == "0") {
-            return (<ScrollView style={styles.seasonView}><QualitiesList addDownload={addDownload} nextEpisode={false} title={title as string} season="0" episode="0" setSelectedItem={(a: string) => { return a }} /></ScrollView>);
+            return (<ScrollView style={styles.seasonView}><QualitiesList downloads={downloads} addDownload={addDownload} nextEpisode={false} title={title as string} season="0" episode="0" setSelectedItem={(a: string) => { return a }} /></ScrollView>);
         }
-        return (<ScrollView style={styles.seasonView}>{seasons.map(season => <SeasonAccordian addDownload={addDownload} key={`${title}-s${season.season}`} title={title as string} season={season.season} />)}</ScrollView>)
+        return (<ScrollView style={styles.seasonView}>{seasons.map(season => <SeasonAccordian downloads={downloads} addDownload={addDownload} key={`${title}-s${season.season}`} title={title as string} season={season.season} />)}</ScrollView>)
     }    
 
     return (

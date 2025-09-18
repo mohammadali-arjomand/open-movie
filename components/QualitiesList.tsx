@@ -1,6 +1,8 @@
 import { DownloadProvider } from "@/contexts/DownloadContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loadQualities } from "@/services/load-movie-data";
+import { shareFile } from "@/services/share-file";
+import { DownloadItem } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setStringAsync } from 'expo-clipboard';
@@ -8,7 +10,7 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, Linking, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function QualitiesList({title, season, episode, setSelectedItem, nextEpisode, addDownload}: {title: string, season: string, episode: string, setSelectedItem: any, nextEpisode: boolean, addDownload: (url: string, filename: string) => void}) {
+export default function QualitiesList({title, season, episode, setSelectedItem, nextEpisode, addDownload, downloads}: {title: string, season: string, episode: string, setSelectedItem: any, nextEpisode: boolean, addDownload: (url: string, filename: string) => void, downloads: DownloadItem[]}) {
     const [copiedItem, setCopiedItem] = useState<string>("")
     const [qualities, setQualities] = useState<{quality: string, language: string, url: string}[]>([]);
 
@@ -75,6 +77,30 @@ export default function QualitiesList({title, season, episode, setSelectedItem, 
         router.push("/(tabs)/downloads")
     }
 
+    function checkDownloaded(url: string) {
+        for (var downloadItem of downloads) {
+            if (downloadItem.url == url) {
+                return true
+            }            
+        }
+        return false
+    }
+
+    function shareFileOrOpenDownloads(url: string): void {
+        for (var downloadItem of downloads) {
+            if (downloadItem.url == url) {
+                if (downloadItem.progress < 1) {
+                    router.push("/(tabs)/downloads")
+                    setSelectedItem('')
+                }
+                else {
+                    shareFile(downloadItem.fileUri)
+                }
+                break
+            }            
+        }
+    }
+
     return (
         <DownloadProvider>
             <View>
@@ -88,8 +114,8 @@ export default function QualitiesList({title, season, episode, setSelectedItem, 
                                 <TouchableOpacity onPress={() => copyUrl(quality.url)} style={{borderColor: styles.listItem.borderBottomColor, borderWidth:0.5, borderRadius: 8, padding: 5}}>
                                     <Ionicons name={copiedItem === quality.url ? "copy" : "copy-outline"} size={20}/>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => downloadUrl(quality)} style={{borderColor: styles.listItem.borderBottomColor, borderWidth:0.5, borderRadius: 8, padding: 5, marginLeft: 2}}>
-                                    <Ionicons name="download-outline" size={20}/>
+                                <TouchableOpacity onPress={() => checkDownloaded(quality.url) ? shareFileOrOpenDownloads(quality.url) : downloadUrl(quality)} style={{borderColor: styles.listItem.borderBottomColor, borderWidth:0.5, borderRadius: 8, padding: 5, marginLeft: 2}}>
+                                    <Ionicons name={checkDownloaded(quality.url) ? "checkbox-outline" : "download-outline"} size={20}/>
                                 </TouchableOpacity>
                             </View>
                         </View>

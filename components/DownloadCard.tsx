@@ -1,6 +1,6 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { shareFile } from "@/services/share-file";
 import { Ionicons } from "@expo/vector-icons";
-import * as Sharing from 'expo-sharing';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ProgressBar } from "react-native-paper";
 
@@ -29,21 +29,6 @@ export default function DownloadCard({title, id, progress, speed, fileUri, pause
         icon = "close-outline"
         color = colors.danger
         text = "Canceled"
-    }
-
-
-    const shareFile = async (uri: string) => {
-        try {
-            const canShare = await Sharing.isAvailableAsync()
-            if (!canShare) {
-                Alert.alert("Error Sharing", "Sharing is not available on this device")
-                return
-            }
-            await Sharing.shareAsync(uri)
-        }
-        catch (err) {
-            console.error("Share Error", err);
-        }
     }
 
     const styles = StyleSheet.create({

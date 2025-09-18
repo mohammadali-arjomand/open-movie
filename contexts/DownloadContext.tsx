@@ -1,22 +1,7 @@
+import { DownloadItem } from '@/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system/legacy';
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
-
-export type DownloadStatus = 
-    | "downloading"
-    | "paused"
-    | "completed"
-    | "canceled";
-
-export interface DownloadItem {
-    id: string,
-    url: string, 
-    fileUri: string,
-    progress: number,
-    speed: number, // byte per second
-    status: DownloadStatus,
-    resumable: FileSystem.DownloadResumable | null
-}
 
 interface DownloadContextProps {
     downloads: DownloadItem[],
