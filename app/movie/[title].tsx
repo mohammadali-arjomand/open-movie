@@ -143,6 +143,7 @@ export default function MovieDetailsScreen() {
         delete episodeCount["0"]
     }
     const continueWatching = getFirstUnwatched(title as string, episodeCount)
+    const watchedCompletely = continueWatching === null
     
     return (
         <View style={styles.container}>
@@ -172,7 +173,7 @@ export default function MovieDetailsScreen() {
                     </ScrollView>
                 </View>
             </View>
-            {Object.keys(episodeCount).length === 0 || (continueWatching && continueWatching?.season <= 1 && continueWatching?.episode <= 1) ? null : (
+            {Object.keys(episodeCount).length === 0 || watchedCompletely || (continueWatching && continueWatching?.season <= 1 && continueWatching?.episode <= 1) ? null : (
                 <View>
                     <TouchableOpacity style={styles.continueWatching} onPress={() => setSelectedItem("continue")}>
                         <Text style={{color: colors.text3, textAlign: 'center'}}>Continue watching from Season {continueWatching?.season} Episode {continueWatching?.episode}</Text>

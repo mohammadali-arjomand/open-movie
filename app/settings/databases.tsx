@@ -54,6 +54,7 @@ export default function databasesSettings() {
     })
 
     const importDatabase = async () => {
+        AsyncStorage.setItem("remove-help", "true")
         try {
             const result = await getDocumentAsync({
                 type: ['application/octet-stream', 'application/x-sqlite3', '*/*'],

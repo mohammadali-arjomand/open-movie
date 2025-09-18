@@ -57,6 +57,7 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
     }, [downloads])
 
     const addDownload = (url: string, filename: string) => {
+        AsyncStorage.setItem("remove-help", "true")
         const fileUri = FileSystem.documentDirectory + filename
         const id = Date.now().toString()
 
