@@ -64,7 +64,7 @@ export default function informationSettings() {
 
     return (
         <ScrollView style={styles.container}>
-            <Stack.Screen options={{headerTitle:"Appearance", headerStyle: styles.header, headerTintColor: useThemeColor("text")}}/>
+            <Stack.Screen options={{headerTitle:"Appearance", headerBackTitle: "Settings", headerStyle: styles.header, headerTintColor: useThemeColor("text")}}/>
             <DropOption
                 label="Theme"
                 options={themeOptions}

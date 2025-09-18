@@ -133,7 +133,7 @@ export default function databasesSettings() {
 
     return (
         <ScrollView style={styles.container}>
-            <Stack.Screen options={{headerTitle:"Databases", headerStyle: styles.header, headerTintColor: useThemeColor("text")}}/>
+            <Stack.Screen options={{headerTitle:"Databases", headerBackTitle: "Settings", headerStyle: styles.header, headerTintColor: useThemeColor("text")}}/>
             <DropOption
                 label="Connect to IMDb"
                 options={[{label: "Yes", value: "yes"}, {label: "No", value: "no"}]}

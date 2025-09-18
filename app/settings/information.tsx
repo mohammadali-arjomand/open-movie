@@ -31,7 +31,7 @@ export default function informationSettings() {
 
     return (
         <ScrollView style={styles.container}>
-            <Stack.Screen options={{headerTitle:"Information", headerStyle: styles.header, headerTintColor: useThemeColor("text")}}/>
+            <Stack.Screen options={{headerTitle:"Information", headerBackTitle: "Settings", headerStyle: styles.header, headerTintColor: useThemeColor("text")}}/>
             <Text style={styles.title}>About App</Text>
             <Text style={styles.body}>Open Movie is an application for browsing movies and series when you're offline.</Text>
             <Text style={styles.title}>Contact Us</Text>
