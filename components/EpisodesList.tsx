@@ -39,7 +39,7 @@ export default function EpisodesList({title, season, addDownload, downloads, mar
                     <TouchableOpacity onPress={() => setSelectedItem(`${season}-${episode.episode}`)} key={`${title}-s${season}-e${episode.episode}-button`} style={styles.listTouchableItem}>
                         <Text style={styles.listItem}>
                             {isWatched(title, Number(season), Number(episode.episode)) ? <Ionicons name="checkmark-circle-outline" size={16} /> : null}{" "}
-                            Episode {episode.episode}
+                            {Number(episode.episode) > 0 ? null : "Special"} Episode {Number(episode.episode) > 0 ? episode.episode : null}
                         </Text>
                     </TouchableOpacity>
                     <Portal key={`${title}-s${season}-e${episode.episode}-modal`}>

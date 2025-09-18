@@ -26,7 +26,7 @@ export default function SeasonAccordian({ addDownload, season, title, downloads,
     return (
         <List.Accordion
             style={styles.accordion}
-            title={"Season " + season}
+            title={(Number(season) > 0 ? "" : "Special ") + "Season " + (Number(season) > 0 ? season : "")}
             expanded={expanded}
             titleStyle={styles.title}
             descriptionStyle={styles.container}
