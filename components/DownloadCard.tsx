@@ -93,7 +93,7 @@ export default function DownloadCard({title, id, progress, speed, fileUri, size,
                     {title.length > 0 ? title : "Untitled"}
                 </Text>
                 <Text style={styles.sublabel}>
-                    {status === "downloading" ? <Text>{(downloadedSize / (1024 * 1024)).toFixed(2)} of {(size / (1024*1024)).toFixed(2)}MB - {(speed/1024).toFixed(1)}KB/s -</Text> : status === "paused" ? <Text>{(downloadedSize / (1024*1024)).toFixed(2)} of {(size / (1024*1024)).toFixed(2)} - </Text> : <Text>{(size/(1024*1024)).toFixed(2)}MB - </Text>}
+                    {status === "downloading" ? <Text>{(downloadedSize / (1024 * 1024)).toFixed(2)} of {(size / (1024*1024)).toFixed(2)}MB - {(speed/1024).toFixed(1)}KB/s - </Text> : status === "paused" ? <Text>{(downloadedSize / (1024*1024)).toFixed(2)} of {(size / (1024*1024)).toFixed(2)} - </Text> : <Text>{(size/(1024*1024)).toFixed(2)}MB - </Text>}
                     {text}
                 </Text>
                 <ProgressBar progress={progress} color={color} style={{backgroundColor: useThemeColor("border"), borderRadius: 2}} />
