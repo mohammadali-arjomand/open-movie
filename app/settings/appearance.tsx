@@ -30,7 +30,6 @@ export default function informationSettings() {
         { label: "Orange", value: "#EF7722"},
         { label: "Light-Green", value: "#A8BBA3"},
         { label: "Light-Blue", value: "#476EAE"},
-        { label: "Kalaghi", value: "#124170"},
     ]
 
     const [theme, setTheme] = useState<string>("system")
