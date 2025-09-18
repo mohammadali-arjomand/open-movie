@@ -9,15 +9,6 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-// type FullRow = {
-//     quality: string,
-//     language: string,
-//     url: string,
-//     title: string,
-//     season: string,
-//     episode: string,
-// }
-
 type Movie = {
     title: string,
 }
@@ -64,7 +55,11 @@ export default function Home() {
     useEffect(() => {
         const newTitles: Movie[] = []
         for (var title in titles) {
-            if (!continueWatchingTitles.includes({title}) && !newTitles.includes({title})) {
+            if ("0" in titles[title]) {
+                delete titles[title]["0"]
+            }           
+            
+            if (!continueWatchingTitles.includes({title}) && !newTitles.includes({title}) && Object.keys(titles[title]).length > 0) {
                 newTitles.push({title})
             }
         }

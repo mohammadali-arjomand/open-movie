@@ -139,8 +139,11 @@ export default function MovieDetailsScreen() {
         return (<ScrollView style={styles.seasonView}>{seasons.map(season => <SeasonAccordian markAsWatched={markAsWatched} isWatched={isWatched} downloads={downloads} addDownload={addDownload} key={`${title}-s${season.season}`} title={title as string} season={season.season} />)}</ScrollView>)
     }
 
+    if ("0" in episodeCount) {
+        delete episodeCount["0"]
+    }
     const continueWatching = getFirstUnwatched(title as string, episodeCount)
-
+    
     return (
         <View style={styles.container}>
             <Stack.Screen options={{headerShown: false}} />
@@ -169,7 +172,7 @@ export default function MovieDetailsScreen() {
                     </ScrollView>
                 </View>
             </View>
-            {continueWatching && continueWatching?.season <= 1 && continueWatching?.episode <= 1 ? null : (
+            {Object.keys(episodeCount).length === 0 || (continueWatching && continueWatching?.season <= 1 && continueWatching?.episode <= 1) ? null : (
                 <View>
                     <TouchableOpacity style={styles.continueWatching} onPress={() => setSelectedItem("continue")}>
                         <Text style={{color: colors.text3, textAlign: 'center'}}>Continue watching from Season {continueWatching?.season} Episode {continueWatching?.episode}</Text>
