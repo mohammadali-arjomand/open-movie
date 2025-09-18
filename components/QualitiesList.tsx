@@ -71,8 +71,9 @@ export default function QualitiesList({title, season, episode, setSelectedItem, 
         const copyUrl = (url: string) => setStringAsync(url).then(() => setCopiedItem(url))
 
     function downloadUrl(quality: {url: string, quality: string, language: string}): void {
-        const filename = `${title} S${season}E${episode} ${quality.quality} ${quality.language == 'sub' ? 'Subtitle' : (quality.language == 'dub' ? 'Dubbed' : 'Trailer')}.${quality.url.split(".").at(-1)}`
+        const filename = `${title} S${String(season).padStart(2, "0")}E${String(episode).padStart(2, "0")} ${quality.quality} ${quality.language == 'sub' ? 'Subtitle' : (quality.language == 'dub' ? 'Dubbed' : 'Trailer')}.${quality.url.split(".").at(-1)}`
         addDownload(quality.url, filename.replaceAll(" ", "."))
+
         setSelectedItem("")
         router.push("/(tabs)/downloads")
     }

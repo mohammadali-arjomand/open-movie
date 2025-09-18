@@ -4,7 +4,6 @@ import { useThemeColor } from "@/hooks/useThemeColor"
 import { deleteAsync } from "expo-file-system/legacy"
 import { Stack } from "expo-router"
 import { ScrollView, StyleSheet, Text, View } from "react-native"
-import { Button } from "react-native-paper"
 
 export default function downloadsSettings() {
     const {downloads, pauseDownload, resumeDownload, setDownloads, addDownload} = useDownload()
@@ -32,9 +31,9 @@ export default function downloadsSettings() {
                 ))}
                 {downloads.length === 0 ? <Text style={styles.message}>No downloads!</Text> : null} 
             </ScrollView>
-            <Button onPress={() => addDownload("https://s34.picofile.com/file/8486872134/poster_placeholder.png", "poster.png")}>
+            {/* <Button onPress={() => addDownload("https://s34.picofile.com/file/8486872134/poster_placeholder.png", "poster.png")}>
                 <Text>Add Download</Text>
-            </Button>
+            </Button> */}
         </View>
     )
 }
