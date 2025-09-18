@@ -1,4 +1,5 @@
 import { BookmarkProvider } from "@/contexts/BookmarkContext";
+import { ContinueWatchingProvider } from "@/contexts/ContinueWatchingContext";
 import { DownloadProvider } from "@/contexts/DownloadContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Stack } from "expo-router";
@@ -20,10 +21,12 @@ export default function RootLayout() {
         <PaperProvider theme={theme}>
             <DownloadProvider>
                 <BookmarkProvider>
-                    <Stack>
-                        <Stack.Screen name="(tabs)" options={{ headerShown: false}} />
-                        <Stack.Screen name="movie/[title]" options={{ headerTitle: "Movie Details", headerTintColor: useThemeColor("text"), headerStyle: {backgroundColor: useThemeColor("background2")}}} />
-                    </Stack>
+                    <ContinueWatchingProvider>
+                        <Stack>
+                            <Stack.Screen name="(tabs)" options={{ headerShown: false}} />
+                            <Stack.Screen name="movie/[title]" options={{ headerTitle: "Movie Details", headerTintColor: useThemeColor("text"), headerStyle: {backgroundColor: useThemeColor("background2")}}} />
+                        </Stack>
+                    </ContinueWatchingProvider>
                 </BookmarkProvider>
             </DownloadProvider>
         </PaperProvider>

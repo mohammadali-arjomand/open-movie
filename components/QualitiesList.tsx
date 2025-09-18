@@ -10,7 +10,7 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, Linking, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function QualitiesList({title, season, episode, setSelectedItem, nextEpisode, addDownload, downloads}: {title: string, season: string, episode: string, setSelectedItem: any, nextEpisode: boolean, addDownload: (url: string, filename: string) => void, downloads: DownloadItem[]}) {
+export default function QualitiesList({title, season, episode, setSelectedItem, addDownload, downloads, markAsWatched}: {title: string, season: string, episode: string, setSelectedItem: any, addDownload: (url: string, filename: string) => void, downloads: DownloadItem[], markAsWatched: (title: string, season: number, episode: number) => void}) {
     const [copiedItem, setCopiedItem] = useState<string>("")
     const [qualities, setQualities] = useState<{quality: string, language: string, url: string}[]>([]);
 
@@ -22,6 +22,7 @@ export default function QualitiesList({title, season, episode, setSelectedItem, 
     
     const openUrl = (quality: any) => {
         setSelectedItem('')
+        markAsWatched(title, Number(season), Number(episode))
         AsyncStorage.setItem("remove-help", "true")
         Linking.canOpenURL(`vlc://${quality.url}`)
         .then((supported) => {
@@ -95,6 +96,7 @@ export default function QualitiesList({title, season, episode, setSelectedItem, 
                     setSelectedItem('')
                 }
                 else {
+                    markAsWatched(title, Number(season), Number(episode))
                     shareFile(downloadItem.fileUri)
                 }
                 break

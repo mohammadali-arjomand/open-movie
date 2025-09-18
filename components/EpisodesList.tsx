@@ -1,12 +1,13 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loadEpisodes } from "@/services/load-movie-data";
 import { DownloadItem } from "@/types";
+import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Modal, Portal } from "react-native-paper";
 import QualitiesList from "./QualitiesList";
 
-export default function EpisodesList({title, season, addDownload, downloads}: {title: string, season: string, addDownload: (url: string, filename: string) => void, downloads: DownloadItem[]}) {
+export default function EpisodesList({title, season, addDownload, downloads, markAsWatched, isWatched}: {title: string, season: string, addDownload: (url: string, filename: string) => void, downloads: DownloadItem[], markAsWatched: (title: string, season: number, episode: number) => void, isWatched: (title: string, season: number, episode: number) => boolean}) {
     const [episodes, setEpisodes] = useState<{episode: string}[]>([]);
     useEffect(() => {
         loadEpisodes(title, season).then(episodes => setEpisodes(episodes || []));
@@ -36,13 +37,16 @@ export default function EpisodesList({title, season, addDownload, downloads}: {t
             {episodes.map(episode => (
                 <View key={`${title}-s${season}-e${episode.episode}`}>
                     <TouchableOpacity onPress={() => setSelectedItem(`${season}-${episode.episode}`)} key={`${title}-s${season}-e${episode.episode}-button`} style={styles.listTouchableItem}>
-                       <Text style={styles.listItem}>Episode {episode.episode}</Text>
+                        <Text style={styles.listItem}>
+                            {isWatched(title, Number(season), Number(episode.episode)) ? <Ionicons name="checkmark-circle-outline" size={16} /> : null}{" "}
+                            Episode {episode.episode}
+                        </Text>
                     </TouchableOpacity>
                     <Portal key={`${title}-s${season}-e${episode.episode}-modal`}>
                         <Modal contentContainerStyle={styles.modal} visible={selectedItem == `${season}-${episode.episode}`} onDismiss={() => setSelectedItem('')}>
                             <Text style={styles.modalTitle}>Season {season} - Episode {episode.episode}</Text>
                             <ScrollView>
-                                <QualitiesList downloads={downloads} addDownload={addDownload} nextEpisode={episodes[episode.episode as unknown as number] !== undefined} title={title} season={season} episode={episode.episode} setSelectedItem={setSelectedItem} />
+                                <QualitiesList downloads={downloads} addDownload={addDownload} markAsWatched={markAsWatched} title={title} season={season} episode={episode.episode} setSelectedItem={setSelectedItem} />
                             </ScrollView>
                         </Modal>
                     </Portal>

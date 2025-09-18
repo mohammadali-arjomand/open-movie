@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ProgressBar } from "react-native-paper";
 
-export default function DownloadCard({title, id, progress, speed, fileUri, size, downloadedSize, pauseDownload, resumeDownload, removeFromList, status="downloading"}: {title: string, id: string, progress: number, speed: number, pauseDownload: (id: string) => void, resumeDownload: (id: string) => void, status?: string, removeFromList: (id: string, uri: string) => void, fileUri: string, size: number, downloadedSize: number}) {
+export default function DownloadCard({title, id, progress, speed, fileUri, size, markAsWatched, downloadedSize, pauseDownload, resumeDownload, removeFromList, status="downloading"}: {title: string, id: string, progress: number, speed: number, pauseDownload: (id: string) => void, resumeDownload: (id: string) => void, status?: string, removeFromList: (id: string, uri: string) => void, fileUri: string, size: number, downloadedSize: number, markAsWatched: (title: string, season: number, episode: number) => void}) {
     const colors = {
         success: useThemeColor("success"),
         warning: useThemeColor("warning"),
@@ -60,6 +60,11 @@ export default function DownloadCard({title, id, progress, speed, fileUri, size,
             resumeDownload(id)
         }
         else if (status === "completed") {
+            const movieTitle = title.split(/S\d\dE\d\d/)[0].replaceAll(".", " ").trim()
+            const season = Number(title.match(/S\d\dE\d\d/)?.[0].split("E")[0].replace("S", ""))
+            const episode = Number(title.match(/S\d\dE\d\d/)?.[0].split("E")[1])
+            markAsWatched(movieTitle, season, episode)
+            
             shareFile(fileUri)
         }
     }

@@ -1,30 +1,44 @@
 import QualitiesList from "@/components/QualitiesList";
 import SeasonAccordian from "@/components/SeasonAccordian";
 import { useBookmarks } from "@/contexts/BookmarkContext";
+import { useContinueWatching } from "@/contexts/ContinueWatchingContext";
 import { useDownload } from "@/contexts/DownloadContext";
 import usePoster from "@/hooks/usePoster";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { loadSeasons } from "@/services/load-movie-data";
+import { loadNumberOfEpisodes, loadSeasons } from "@/services/load-movie-data";
 import { Ionicons } from "@expo/vector-icons";
 import { openURL } from "expo-linking";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Modal, Portal } from "react-native-paper";
 
 type Season = {
     season: string,
 }
+
+type EpisodeCount = Record<number, number>
 
 export default function MovieDetailsScreen() {
     const {title} = useLocalSearchParams();
     const {isBookmarked, toggleBookmark} = useBookmarks()
     const {imageUrl, score, genres, id} = usePoster(title as string)
 
+    const colors = {
+        text3: useThemeColor("text3")
+    }
+
     const styles = StyleSheet.create({
         container: {
             flex: 1,
             backgroundColor: useThemeColor("background"),
         },  
+        continueWatching: {
+            backgroundColor: useThemeColor("primary"),
+            marginHorizontal: 16,
+            padding: 12,
+            borderRadius: 18,
+        },
         title: {
             fontSize: 24,
             fontWeight: "bold",
@@ -76,16 +90,43 @@ export default function MovieDetailsScreen() {
             borderRadius: 7,
             padding: 3,
             margin: 2,
-        }
+        },
+        modal: {backgroundColor: useThemeColor("background2"), padding: 20, margin: 20, borderRadius: 8},
+        modalTitle: {
+            fontSize: 18,
+            fontWeight: "bold",
+            marginBottom: 12,
+            color: useThemeColor("text")
+        },
     })
 
     const [seasons, setSeasons] = useState<Season[]>([]);
+    const [episodeCount, setEpisodeCount] = useState<EpisodeCount>({})
+    const [selectedItem, setSelectedItem] = useState<string>("")
 
     useEffect(() => {
         loadSeasons(title as string).then(seasons => setSeasons(seasons || []));
     }, [])
 
+    useEffect(() => {
+        if (!seasons || seasons.length === 0) return
+
+        const loadAllEpisodes = async () => {
+            const results = await Promise.all(
+                seasons.map(season => (
+                    loadNumberOfEpisodes(title as string, Number(season.season))
+                        .then(num => [Number(season.season), num ?? 0] as const)
+                ))
+            )
+
+            const counts = Object.fromEntries(results)
+            setEpisodeCount(counts)
+        }
+        loadAllEpisodes()
+    }, [seasons])
+
     const {addDownload, downloads} = useDownload()
+    const {markAsWatched, isWatched, getFirstUnwatched} = useContinueWatching()
 
     const loadMovieData = () => {
         if (seasons.length === 0) {
@@ -93,10 +134,12 @@ export default function MovieDetailsScreen() {
         }
         
         if (seasons.length == 1 && seasons[0].season == "0") {
-            return (<ScrollView style={styles.seasonView}><QualitiesList downloads={downloads} addDownload={addDownload} nextEpisode={false} title={title as string} season="0" episode="0" setSelectedItem={(a: string) => { return a }} /></ScrollView>);
+            return (<ScrollView style={styles.seasonView}><QualitiesList markAsWatched={markAsWatched} downloads={downloads} addDownload={addDownload} title={title as string} season="0" episode="0" setSelectedItem={(a: string) => { return a }} /></ScrollView>);
         }
-        return (<ScrollView style={styles.seasonView}>{seasons.map(season => <SeasonAccordian downloads={downloads} addDownload={addDownload} key={`${title}-s${season.season}`} title={title as string} season={season.season} />)}</ScrollView>)
-    }    
+        return (<ScrollView style={styles.seasonView}>{seasons.map(season => <SeasonAccordian markAsWatched={markAsWatched} isWatched={isWatched} downloads={downloads} addDownload={addDownload} key={`${title}-s${season.season}`} title={title as string} season={season.season} />)}</ScrollView>)
+    }
+
+    const continueWatching = getFirstUnwatched(title as string, episodeCount)
 
     return (
         <View style={styles.container}>
@@ -126,6 +169,22 @@ export default function MovieDetailsScreen() {
                     </ScrollView>
                 </View>
             </View>
+            {continueWatching && continueWatching?.season <= 1 && continueWatching?.episode <= 1 ? null : (
+                <View>
+                    <TouchableOpacity style={styles.continueWatching} onPress={() => setSelectedItem("continue")}>
+                        <Text style={{color: colors.text3, textAlign: 'center'}}>Continue watching from Season {continueWatching?.season} Episode {continueWatching?.episode}</Text>
+                    </TouchableOpacity>
+                    <Portal key={`${title}-continue-watching-modal`}>
+                        <Modal contentContainerStyle={styles.modal} visible={selectedItem === "continue"} onDismiss={() => setSelectedItem("")}>
+                            <Text style={styles.modalTitle}>Season {continueWatching?.season} - Episode {continueWatching?.episode}</Text>
+                            <ScrollView>
+                                <QualitiesList downloads={downloads} addDownload={addDownload} markAsWatched={markAsWatched} title={title as string} season={continueWatching?.season.toString() ?? "1"} episode={continueWatching?.episode.toString() ?? "1"} setSelectedItem={setSelectedItem} />
+                            </ScrollView>
+                        </Modal>
+                    </Portal>
+                </View>
+                
+            )}
             {loadMovieData()}
         </View>
     )

@@ -115,22 +115,6 @@ async function loadQualities(title: string, season: string, episode: string) {
     }
 }
 
-// async function loadQualityByUrl(url:string) {
-//     const db = await initDB()
-//     try {
-//         const row = await db.getAllAsync(
-//             "SELECT * FROM files WHERE url=? LIMIT 1",
-//             [url]
-//         )
-        
-//         return parseFullRow(row)[0]
-//     }
-//     catch (error) {
-//         Toast.show("Error in loading full row by url", {duration: Toast.durations.SHORT, position: Toast.positions.BOTTOM})
-//         return parseFullRow([])[0]
-//     }
-// }
-
 async function loadRandomTitles() {
     const db = await initDB()
     try {
@@ -144,5 +128,19 @@ async function loadRandomTitles() {
     }
 }
 
-export { loadEpisodes, loadQualities, loadRandomTitles, loadSeasons };
+async function loadNumberOfEpisodes(title: string, season: number) {
+    const db = await initDB()
+    try {
+        const rows = await db.getAllAsync(
+            "SELECT COUNT(DISTINCT episode) AS episode_count  FROM files WHERE title = ? AND season = ?",
+            [title, season]
+        )
+        return (rows as {episode_count: number}[])[0]?.episode_count
+    }
+    catch (error) {
+        console.error("Error in loading number of episodes:", error);
+    }
+}
+
+export { loadEpisodes, loadNumberOfEpisodes, loadQualities, loadRandomTitles, loadSeasons };
 

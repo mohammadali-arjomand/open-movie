@@ -1,4 +1,5 @@
 import DownloadCard from "@/components/DownloadCard"
+import { useContinueWatching } from "@/contexts/ContinueWatchingContext"
 import { useDownload } from "@/contexts/DownloadContext"
 import { useThemeColor } from "@/hooks/useThemeColor"
 import { deleteAsync } from "expo-file-system/legacy"
@@ -22,12 +23,14 @@ export default function downloadsSettings() {
         deleteAsync(uri)
     }
 
+    const {markAsWatched} = useContinueWatching()
+
     return (
         <View style={{height: "100%", backgroundColor: useThemeColor("background")}}>
             <Stack.Screen options={{headerTitle:"Downloads"}}/>
             <ScrollView>
                 {downloads.toReversed().map(dl => (
-                    <DownloadCard key={dl.id} size={dl.size} downloadedSize={dl.downloadedSize} fileUri={dl.fileUri} title={dl.fileUri.split("/").at(-1) || ""} removeFromList={removeFromList} progress={dl.progress} id={dl.id} status={dl.status} speed={dl.speed} pauseDownload={pauseDownload} resumeDownload={resumeDownload} />
+                    <DownloadCard markAsWatched={markAsWatched} key={dl.id} size={dl.size} downloadedSize={dl.downloadedSize} fileUri={dl.fileUri} title={dl.fileUri.split("/").at(-1) || ""} removeFromList={removeFromList} progress={dl.progress} id={dl.id} status={dl.status} speed={dl.speed} pauseDownload={pauseDownload} resumeDownload={resumeDownload} />
                 ))}
                 {downloads.length === 0 ? <Text style={styles.message}>No downloads!</Text> : null} 
             </ScrollView>
