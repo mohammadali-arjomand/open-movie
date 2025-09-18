@@ -35,7 +35,7 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
                             {},
                             (downloadProgress) => {
                                 const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite
-                                setDownloads(prev => prev.map(d => d.id === item.id ? {...d, progress} : d))
+                                setDownloads(prev => prev.map(d => d.id === item.id ? {...d, progress, downloadedSize: downloadProgress.totalBytesWritten, size: downloadProgress.totalBytesExpectedToWrite} : d))
                                 if (progress >= 1) {
                                     setDownloads(prev => prev.map(d => d.id === item.id ? {...d, status: "completed"} : d))
                                 }
@@ -74,7 +74,7 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
                 speedRefs.current[id] = {lastTime : now, lastBytes: downloadProgress.totalBytesWritten}
             }
 
-            setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, progress, status: "downloading", speed: speed || d.speed} : d))
+            setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, progress, downloadedSize: downloadProgress.totalBytesWritten, size: downloadProgress.totalBytesExpectedToWrite, status: "downloading", speed: speed || d.speed} : d))
 
             if (progress >= 1) {
                 setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, status: "completed"} : d))
@@ -87,6 +87,8 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
             fileUri,
             progress: 0,
             speed: 0,
+            downloadedSize: 0,
+            size: 0,
             status: "downloading",
             resumable: DownloadResumable
         }

@@ -11,6 +11,8 @@ export interface DownloadItem {
     url: string, 
     fileUri: string,
     progress: number,
+    downloadedSize: number, // byte
+    size: number,
     speed: number, // byte per second
     status: DownloadStatus,
     resumable: DownloadResumable | null

@@ -27,7 +27,7 @@ export default function downloadsSettings() {
             <Stack.Screen options={{headerTitle:"Downloads"}}/>
             <ScrollView>
                 {downloads.toReversed().map(dl => (
-                    <DownloadCard key={dl.id} fileUri={dl.fileUri} title={dl.fileUri.split("/").at(-1) || ""} removeFromList={removeFromList} progress={dl.progress} id={dl.id} status={dl.status} speed={dl.speed} pauseDownload={pauseDownload} resumeDownload={resumeDownload} />
+                    <DownloadCard key={dl.id} size={dl.size} downloadedSize={dl.downloadedSize} fileUri={dl.fileUri} title={dl.fileUri.split("/").at(-1) || ""} removeFromList={removeFromList} progress={dl.progress} id={dl.id} status={dl.status} speed={dl.speed} pauseDownload={pauseDownload} resumeDownload={resumeDownload} />
                 ))}
                 {downloads.length === 0 ? <Text style={styles.message}>No downloads!</Text> : null} 
             </ScrollView>

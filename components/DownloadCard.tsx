@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ProgressBar } from "react-native-paper";
 
-export default function DownloadCard({title, id, progress, speed, fileUri, pauseDownload, resumeDownload, removeFromList, status="downloading"}: {title: string, id: string, progress: number, speed: number, pauseDownload: (id: string) => void, resumeDownload: (id: string) => void, status?: string, removeFromList: (id: string, uri: string) => void, fileUri: string}) {
+export default function DownloadCard({title, id, progress, speed, fileUri, size, downloadedSize, pauseDownload, resumeDownload, removeFromList, status="downloading"}: {title: string, id: string, progress: number, speed: number, pauseDownload: (id: string) => void, resumeDownload: (id: string) => void, status?: string, removeFromList: (id: string, uri: string) => void, fileUri: string, size: number, downloadedSize: number}) {
     const colors = {
         success: useThemeColor("success"),
         warning: useThemeColor("warning"),
@@ -93,7 +93,7 @@ export default function DownloadCard({title, id, progress, speed, fileUri, pause
                     {title}
                 </Text>
                 <Text style={styles.sublabel}>
-                    {status === "downloading" ? <Text>{(progress*100).toFixed(1)}% - {(speed / (1024*1024)).toFixed(2)} KBps - </Text> : status === "paused" ? <Text>{(progress*100).toFixed(1)}% - </Text> : null}
+                    {status === "downloading" ? <Text>{(downloadedSize / (1024 * 1024)).toFixed(2)} of {(size / (1024*1024)).toFixed(2)}MB - {(speed/1024).toFixed(1)}KB/s -</Text> : status === "paused" ? <Text>{(downloadedSize / (1024*1024)).toFixed(2)} of {(size / (1024*1024)).toFixed(2)} - </Text> : <Text>{(size/(1024*1024)).toFixed(2)}MB - </Text>}
                     {text}
                 </Text>
                 <ProgressBar progress={progress} color={color} style={{backgroundColor: useThemeColor("border"), borderRadius: 2}} />
