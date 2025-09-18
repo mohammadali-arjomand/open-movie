@@ -90,7 +90,7 @@ export default function DownloadCard({title, id, progress, speed, fileUri, size,
             <TouchableOpacity onPress={handlePress} onLongPress={handleLongPress}>
                 <Text style={styles.label} numberOfLines={1} ellipsizeMode="tail">
                     <Ionicons name={icon} color={color} size={18} />{" "}
-                    {title}
+                    {title.length > 0 ? title : "Untitled"}
                 </Text>
                 <Text style={styles.sublabel}>
                     {status === "downloading" ? <Text>{(downloadedSize / (1024 * 1024)).toFixed(2)} of {(size / (1024*1024)).toFixed(2)}MB - {(speed/1024).toFixed(1)}KB/s -</Text> : status === "paused" ? <Text>{(downloadedSize / (1024*1024)).toFixed(2)} of {(size / (1024*1024)).toFixed(2)} - </Text> : <Text>{(size/(1024*1024)).toFixed(2)}MB - </Text>}
