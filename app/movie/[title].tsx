@@ -115,15 +115,15 @@ export default function MovieDetailsScreen() {
                         </TouchableOpacity>
                     </View>
                     <Text style={{fontWeight: 'bold', fontSize: 30, marginHorizontal: 5, textAlign: 'left', color: useThemeColor("text")}} ellipsizeMode="tail" numberOfLines={2}>{title}</Text>
-                    <Text style={{marginHorizontal: 5, textAlign: 'left', marginTop: 5}}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{maxHeight: 30, marginHorizontal: 5}}>
                         {genres.split(", ").map((genre, index) => {
                             if (genre.length > 0) return (
-                                <View key={index}>
+                                <View key={index} style={{maxHeight: 30}}>
                                     <Text style={styles.genresItem}>{genre}</Text>
                                 </View>
                             )
                         })}
-                    </Text>
+                    </ScrollView>
                 </View>
             </View>
             {loadMovieData()}
