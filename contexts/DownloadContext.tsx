@@ -51,6 +51,9 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
                             (downloadProgress) => {
                                 const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite
                                 setDownloads(prev => prev.map(d => d.id === item.id ? {...d, progress} : d))
+                                if (progress >= 1) {
+                                    setDownloads(prev => prev.map(d => d.id === item.id ? {...d, status: "completed"} : d))
+                                }
                             }
                         )
                         return {...item, resumable}
@@ -87,6 +90,10 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
             }
 
             setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, progress, status: "downloading", speed: speed || d.speed} : d))
+
+            if (progress >= 1) {
+                setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, status: "completed"} : d))
+            }
         })
 
         const newItem: DownloadItem = {
@@ -102,7 +109,7 @@ export const DownloadProvider = ({children}: {children: ReactNode}) => {
         setDownloads(prev => [...prev, newItem])
 
         DownloadResumable.downloadAsync()
-            .then(() => setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, status: d.progress < 1 ? d.status : "completed", speed: 0} : d)))
+            .then(() =>{setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, status: d.progress >= 1 ? "completed" : d.status, speed: 0} : d))})
             .catch(() => setDownloads(prev => prev.map(d => d.id === newItem.id ? {...d, status: "canceled", speed: 0} : d)))
     }
 

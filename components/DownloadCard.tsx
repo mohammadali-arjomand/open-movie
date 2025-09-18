@@ -1,9 +1,10 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Ionicons } from "@expo/vector-icons";
+import * as Sharing from 'expo-sharing';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ProgressBar } from "react-native-paper";
 
-export default function DownloadCard({title, id, progress, speed, pauseDownload, resumeDownload, removeFromList, status="downloading"}: {title: string, id: string, progress: number, speed: number, pauseDownload: (id: string) => void, resumeDownload: (id: string) => void, status?: string, removeFromList: (id: string) => void}) {
+export default function DownloadCard({title, id, progress, speed, fileUri, pauseDownload, resumeDownload, removeFromList, status="downloading"}: {title: string, id: string, progress: number, speed: number, pauseDownload: (id: string) => void, resumeDownload: (id: string) => void, status?: string, removeFromList: (id: string, uri: string) => void, fileUri: string}) {
     const colors = {
         success: useThemeColor("success"),
         warning: useThemeColor("warning"),
@@ -29,6 +30,22 @@ export default function DownloadCard({title, id, progress, speed, pauseDownload,
         color = colors.danger
         text = "Canceled"
     }
+
+
+    const shareFile = async (uri: string) => {
+        try {
+            const canShare = await Sharing.isAvailableAsync()
+            if (!canShare) {
+                Alert.alert("Error Sharing", "Sharing is not available on this device")
+                return
+            }
+            await Sharing.shareAsync(uri)
+        }
+        catch (err) {
+            console.error("Share Error", err);
+        }
+    }
+
     const styles = StyleSheet.create({
         container: {
             padding: 8,
@@ -57,13 +74,16 @@ export default function DownloadCard({title, id, progress, speed, pauseDownload,
         else if (status === "paused") {
             resumeDownload(id)
         }
+        else if (status === "completed") {
+            shareFile(fileUri)
+        }
     }
 
     const handleLongPress = () => {
         if (status !== "downloading") {
              Alert.alert(
                 'Confirm Remove',
-                'Are you sure that you want to remove ' + title + ' from downloads list?',
+                'Are you sure that you want to remove ' + title + '?',
                 [
                     {
                         text: "Cancel",
@@ -73,7 +93,7 @@ export default function DownloadCard({title, id, progress, speed, pauseDownload,
                         text: "Remove",
                         style: "destructive",
                         onPress: async () => {
-                            removeFromList(id)
+                            removeFromList(id, fileUri)
                         }
                     }
                 ]
