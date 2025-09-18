@@ -1,4 +1,5 @@
 import MovieCard from "@/components/MovieCard";
+import { useContinueWatching } from "@/contexts/ContinueWatchingContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { loadRandomTitles } from "@/services/load-movie-data";
 import { Ionicons } from "@expo/vector-icons";
@@ -58,6 +59,18 @@ export default function Home() {
         }
     })
 
+    const {titles} = useContinueWatching()
+    const [continueWatchingTitles, setContinueWatchingTitles] = useState<Movie[]>([])
+    useEffect(() => {
+        const newTitles: Movie[] = []
+        for (var title in titles) {
+            if (!continueWatchingTitles.includes({title}) && !newTitles.includes({title})) {
+                newTitles.push({title})
+            }
+        }
+        setContinueWatchingTitles(newTitles)
+    }, [titles])
+
     return (
         <View style={styles.container}>
             {
@@ -73,7 +86,7 @@ export default function Home() {
                         <Text style={styles.link}>- How to import?</Text>
                     </TouchableOpacity>
                 </ScrollView> :
-                <View>
+                <ScrollView>
                     <Text style={{...styles.header, textAlign:'left',marginLeft:10}}>
                         <Ionicons name="heart" size={25} color={styles.link.color} />{" "}
                         For you
@@ -87,7 +100,24 @@ export default function Home() {
                         )}
                         showsHorizontalScrollIndicator={false}
                     />
-                </View>
+                    {continueWatchingTitles.length === 0 ? null : (
+                        <View>
+                            <Text style={{...styles.header, textAlign:'left',marginLeft:10}}>
+                                <Ionicons name="eye" size={25} color={styles.link.color} />{" "}
+                                Continue Watching
+                            </Text>
+                            <FlatList
+                                data={continueWatchingTitles.toReversed()}
+                                keyExtractor={(item) => item.title}
+                                horizontal={true}
+                                renderItem={({item}) => (
+                                    <MovieCard title={item.title} horizontal={true} />
+                                )}
+                                showsHorizontalScrollIndicator={false}
+                            />
+                        </View>
+                    )}
+                </ScrollView>
             }
         </View>
     )
