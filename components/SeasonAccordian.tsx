@@ -4,7 +4,19 @@ import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { List } from "react-native-paper";
 import EpisodesList from "./EpisodesList";
-export default function SeasonAccordian({ addDownload, season, title, downloads, markAsWatched, isWatched }: { addDownload: (url: string, filename: string) => void, season: string, title: string,downloads: DownloadItem[], markAsWatched: (title: string, season: number, episode: number) => void, isWatched: (title: string, season: number, episode: number) => boolean }) {
+
+type SeasonAccoridanProps = {
+    addDownload: (url: string, filename: string) => void,
+    season: string,
+    title: string,
+    downloads: DownloadItem[],
+    markAsWatched: (title: string, season: number, episode: number) => void,
+    markAsUnwatched: (title: string, season: number, episode: number) => void,
+    isWatched: (title: string, season: number, episode: number) => boolean,
+    setWatchedCompletely: (newValue: boolean) => void,
+}
+
+export default function SeasonAccordian({ addDownload, season, title, downloads, markAsWatched, markAsUnwatched, isWatched, setWatchedCompletely }: SeasonAccoridanProps) {
     const [expanded, setExpanded] = useState(false);
 
     const handlePress = () => setExpanded(!expanded);
@@ -34,7 +46,7 @@ export default function SeasonAccordian({ addDownload, season, title, downloads,
             onPress={handlePress}
             left={props => <List.Icon {...props} color={styles.title.color} icon="folder" />}
         >
-            <EpisodesList markAsWatched={markAsWatched} isWatched={isWatched} downloads={downloads} addDownload={addDownload} season={season as string} title={title as string} />
+            <EpisodesList setWatchedCompletely={setWatchedCompletely} markAsUnwatched={markAsUnwatched} markAsWatched={markAsWatched} isWatched={isWatched} downloads={downloads} addDownload={addDownload} season={season as string} title={title as string} />
         </List.Accordion>
     )
 }

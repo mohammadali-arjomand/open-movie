@@ -10,7 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { openURL } from "expo-linking";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Modal, Portal } from "react-native-paper";
 
 type Season = {
@@ -132,7 +132,7 @@ export default function MovieDetailsScreen() {
     }, [seasons])
 
     const {addDownload, downloads} = useDownload()
-    const {markAsWatched, isWatched, getFirstUnwatched} = useContinueWatching()
+    const {markAsWatched, markAsUnwatched, isWatched, getFirstUnwatched, isWatchedCompletely} = useContinueWatching()
 
     const loadMovieData = () => {
         if (seasons.length === 0) {
@@ -142,7 +142,7 @@ export default function MovieDetailsScreen() {
         if (seasons.length == 1 && seasons[0].season == "0") {
             return (<ScrollView style={styles.seasonView}><QualitiesList markAsWatched={markAsWatched} downloads={downloads} addDownload={addDownload} title={title as string} season="0" episode="0" setSelectedItem={(a: string) => { return a }} /></ScrollView>);
         }
-        return (<ScrollView style={styles.seasonView}>{seasons.map(season => <SeasonAccordian markAsWatched={markAsWatched} isWatched={isWatched} downloads={downloads} addDownload={addDownload} key={`${title}-s${season.season}`} title={title as string} season={season.season} />)}</ScrollView>)
+        return (<ScrollView style={styles.seasonView}>{seasons.map(season => <SeasonAccordian setWatchedCompletely={setWatchedCompletely} markAsUnwatched={markAsUnwatched} markAsWatched={markAsWatched} isWatched={isWatched} downloads={downloads} addDownload={addDownload} key={`${title}-s${season.season}`} title={title as string} season={season.season} />)}</ScrollView>)
     }
 
     if ("0" in episodeCount) {
@@ -151,10 +151,28 @@ export default function MovieDetailsScreen() {
     const continueWatching = getFirstUnwatched(title as string, episodeCount)
     const [watchedCompletely, setWatchedCompletely] = useState<boolean>(false)
 
-    const {isWatchedCompletely} = useContinueWatching()
     useEffect(() => {
         isWatchedCompletely(title as string).then(value => setWatchedCompletely(value))
-    }, [])
+    }, [continueWatching])
+
+    function changeToUnwatched() {
+        if (seasons.length === 1 && seasons[0].season == "0") {
+            Alert.alert("Mark as unwatched", "Do you want to mark this movie as unwatched?", [
+                {
+                    text: "No",
+                    style: "cancel"
+                },
+                {
+                    text: "Yes",
+                    style: "default",
+                    onPress: () => {
+                        setWatchedCompletely(false)
+                        markAsUnwatched(title as string, 0, 0)
+                    }
+                }
+            ])
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -201,7 +219,7 @@ export default function MovieDetailsScreen() {
                 
             )}
             {!watchedCompletely ? null :
-                <TouchableOpacity style={styles.watchedCompletelyView}>
+                <TouchableOpacity style={styles.watchedCompletelyView} onLongPress={changeToUnwatched}>
                     <Text style={{color: colors.text3, textAlign: 'center'}}>
                         You've watched this
                         {seasons.length === 1 && seasons[0].season == "0" ? <Text> movie </Text> : <Text> series </Text>}

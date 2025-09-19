@@ -10,6 +10,7 @@ type ContinueWatchingContextType = {
     titles: TitlesContinueWatching,
     isWatched: (title: string, season: number, episode: number) => boolean,
     markAsWatched: (title: string, season: number, episode: number) => void,
+    markAsUnwatched: (title: string, season: number, episode: number) => void,
     getFirstUnwatched: (title: string, episodesList: Record<number, number>) => {season: number, episode: number} | null,
     isWatchedCompletely: (title: string) => Promise<boolean>,
 }
@@ -18,6 +19,7 @@ const ContinueWatchingContext = createContext<ContinueWatchingContextType>({
     titles: {},
     isWatched: () => false,
     markAsWatched: () => {},
+    markAsUnwatched: () => {},
     getFirstUnwatched: () => null,
     isWatchedCompletely: async () => false
 })
@@ -78,29 +80,49 @@ export function ContinueWatchingProvider({children}: {children: ReactNode}) {
     }
 
     async function isWatchedCompletely(title: string): Promise<boolean> {
-        const titleObj = titles[title];
-        if (!titleObj) return false; // اگر عنوان اصلاً دیده نشده
+        const titleObj = titles[title]
+        if (!titleObj) return false
 
-        // گرفتن فصل‌ها با loadSeasons
-        const seasonsList = await loadSeasons(title); // [{season: "1"}, {season: "2"}, ...]
+        const seasonsList = await loadSeasons(title)
 
         for (const seasonObj of seasonsList) {
-            const seasonNum = Number(seasonObj.season); // تبدیل رشته به عدد
-            const totalEpisodes = await loadNumberOfEpisodes(title, seasonNum);
-            const seenEpisodes = titleObj[seasonNum] ?? [];
+            const seasonNum = Number(seasonObj.season)
+            const totalEpisodes = await loadNumberOfEpisodes(title, seasonNum)
+            const seenEpisodes = titleObj[seasonNum] ?? []
 
             if (seenEpisodes.length < (totalEpisodes ?? 0)) {
-                return false; // هنوز همه اپیزودها دیده نشده
+                return false
             }
         }
 
-        return true; // همه فصل‌ها کامل دیده شده
+        return true
+    }
+
+    function markAsUnwatched(title: string, season: number, episode: number) {
+        setTitles(prev => {
+            const titleObj = prev[title]
+            if (!titleObj) return prev
+
+            const seasonEpisodes = titleObj[season] ?? []
+            const newSeasonEpisodes = seasonEpisodes.filter(ep => ep !== episode)
+
+            const newTitleObj = { ...titleObj, [season]: newSeasonEpisodes }
+
+            const hasAnyEpisode = Object.values(newTitleObj).some(arr => arr.length > 0)
+
+            if (!hasAnyEpisode) {
+                const { [title]: _, ...rest } = prev
+                return rest
+            }
+
+            return { ...prev, [title]: newTitleObj }
+        })
     }
 
 
 
     return (
-        <ContinueWatchingContext.Provider value={{titles, isWatched, markAsWatched, getFirstUnwatched, isWatchedCompletely}}>
+        <ContinueWatchingContext.Provider value={{titles, isWatched, markAsWatched, markAsUnwatched, getFirstUnwatched, isWatchedCompletely}}>
             {children}
         </ContinueWatchingContext.Provider>
     )
