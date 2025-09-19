@@ -69,10 +69,7 @@ export default function Home() {
             }
         }
         setContinueWatchingTitles(newTitles)
-        setJustMovies(newJustMovies)
-        console.log(newTitles);
-        console.log(newJustMovies);
-        
+        setJustMovies(newJustMovies)        
         
     }, [titles])
 
