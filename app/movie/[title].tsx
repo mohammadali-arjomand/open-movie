@@ -39,6 +39,12 @@ export default function MovieDetailsScreen() {
             padding: 12,
             borderRadius: 18,
         },
+        watchedCompletelyView: {
+            backgroundColor: useThemeColor("success"),
+            marginHorizontal: 16,
+            padding: 12,
+            borderRadius: 18,
+        },
         title: {
             fontSize: 24,
             fontWeight: "bold",
@@ -189,6 +195,15 @@ export default function MovieDetailsScreen() {
                 </View>
                 
             )}
+            {!watchedCompletely ? null :
+                <TouchableOpacity style={styles.watchedCompletelyView}>
+                    <Text style={{color: colors.text3, textAlign: 'center'}}>
+                        You've watched this
+                        {seasons.length === 1 && seasons[0].season == "0" ? <Text> movie </Text> : <Text> series </Text>}
+                        completely
+                    </Text>
+                </TouchableOpacity>
+            }
             {loadMovieData()}
         </View>
     )
