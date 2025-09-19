@@ -149,8 +149,13 @@ export default function MovieDetailsScreen() {
         delete episodeCount["0"]
     }
     const continueWatching = getFirstUnwatched(title as string, episodeCount)
-    const watchedCompletely = continueWatching === null
-    
+    const [watchedCompletely, setWatchedCompletely] = useState<boolean>(false)
+
+    const {isWatchedCompletely} = useContinueWatching()
+    useEffect(() => {
+        isWatchedCompletely(title as string).then(value => setWatchedCompletely(value))
+    }, [])
+
     return (
         <View style={styles.container}>
             <Stack.Screen options={{headerShown: false}} />
