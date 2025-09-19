@@ -1,3 +1,4 @@
+import { loadNumberOfEpisodes, loadSeasons } from "@/services/load-movie-data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
@@ -9,7 +10,8 @@ type ContinueWatchingContextType = {
     titles: TitlesContinueWatching,
     isWatched: (title: string, season: number, episode: number) => boolean,
     markAsWatched: (title: string, season: number, episode: number) => void,
-    getFirstUnwatched: (title: string, episodesList: Record<number, number>) => {season: number, episode: number} | null
+    getFirstUnwatched: (title: string, episodesList: Record<number, number>) => {season: number, episode: number} | null,
+    isWatchedCompletely: (title: string) => Promise<boolean>,
 }
 
 const ContinueWatchingContext = createContext<ContinueWatchingContextType>({
@@ -17,6 +19,7 @@ const ContinueWatchingContext = createContext<ContinueWatchingContextType>({
     isWatched: () => false,
     markAsWatched: () => {},
     getFirstUnwatched: () => null,
+    isWatchedCompletely: async () => false
 })
 
 export function ContinueWatchingProvider({children}: {children: ReactNode}) {
@@ -74,9 +77,30 @@ export function ContinueWatchingProvider({children}: {children: ReactNode}) {
         return null;
     }
 
+    async function isWatchedCompletely(title: string): Promise<boolean> {
+        const titleObj = titles[title];
+        if (!titleObj) return false; // اگر عنوان اصلاً دیده نشده
+
+        // گرفتن فصل‌ها با loadSeasons
+        const seasonsList = await loadSeasons(title); // [{season: "1"}, {season: "2"}, ...]
+
+        for (const seasonObj of seasonsList) {
+            const seasonNum = Number(seasonObj.season); // تبدیل رشته به عدد
+            const totalEpisodes = await loadNumberOfEpisodes(title, seasonNum);
+            const seenEpisodes = titleObj[seasonNum] ?? [];
+
+            if (seenEpisodes.length < (totalEpisodes ?? 0)) {
+                return false; // هنوز همه اپیزودها دیده نشده
+            }
+        }
+
+        return true; // همه فصل‌ها کامل دیده شده
+    }
+
+
 
     return (
-        <ContinueWatchingContext.Provider value={{titles, isWatched, markAsWatched, getFirstUnwatched}}>
+        <ContinueWatchingContext.Provider value={{titles, isWatched, markAsWatched, getFirstUnwatched, isWatchedCompletely}}>
             {children}
         </ContinueWatchingContext.Provider>
     )

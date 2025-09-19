@@ -50,21 +50,51 @@ export default function Home() {
         }
     })
 
-    const {titles} = useContinueWatching()
+    const {titles, isWatchedCompletely} = useContinueWatching()
     const [continueWatchingTitles, setContinueWatchingTitles] = useState<Movie[]>([])
+    const [justMovies, setJustMovies] = useState<Movie[]>([])
     useEffect(() => {
         const newTitles: Movie[] = []
+        const newJustMovies: Movie[] = []
         for (var title in titles) {
-            if ("0" in titles[title]) {
-                delete titles[title]["0"]
-            }           
+            // if ("0" in titles[title]) {
+            //     delete titles[title]["0"]
+            // }
             
             if (!continueWatchingTitles.includes({title}) && !newTitles.includes({title}) && Object.keys(titles[title]).length > 0) {
                 newTitles.push({title})
             }
+            if (Object.keys(titles[title]).length === 1 && Object.keys(titles[title])[0] === "0") {
+                newJustMovies.push({title})
+            }
         }
         setContinueWatchingTitles(newTitles)
+        setJustMovies(newJustMovies)
+        console.log(newTitles);
+        console.log(newJustMovies);
+        
+        
     }, [titles])
+
+    const [watchedCompletelyMap, setWatchedCompletelyMap] = useState<Record<string, boolean>>({});
+
+    useEffect(() => {
+    if (continueWatchingTitles.length === 0) return;
+
+    const checkAllTitles = async () => {
+        const results = await Promise.all(
+            continueWatchingTitles.map(async ({ title }) => {
+                const complete = await isWatchedCompletely(title)
+                return [title, complete] as const
+            })
+        )
+
+        setWatchedCompletelyMap(Object.fromEntries(results))
+        
+    }
+
+    checkAllTitles()
+    }, [continueWatchingTitles])
 
     return (
         <View style={styles.container}>
@@ -83,7 +113,7 @@ export default function Home() {
                 </ScrollView> :
                 <ScrollView>
                     <Text style={{...styles.header, textAlign:'left',marginLeft:10}}>
-                        <Ionicons name="heart" size={25} color={styles.link.color} />{" "}
+                        <Ionicons name="heart-circle" size={25} color={styles.link.color} />{" "}
                         For you
                     </Text>
                     <FlatList
@@ -95,10 +125,10 @@ export default function Home() {
                         )}
                         showsHorizontalScrollIndicator={false}
                     />
-                    {continueWatchingTitles.length === 0 ? null : (
+                    {continueWatchingTitles.length - Object.values(watchedCompletelyMap).filter(Boolean).length === 0 ? null : (
                         <View>
                             <Text style={{...styles.header, textAlign:'left',marginLeft:10}}>
-                                <Ionicons name="eye" size={25} color={styles.link.color} />{" "}
+                                <Ionicons name="play-forward-circle" size={25} color={styles.link.color} />{" "}
                                 Continue Watching
                             </Text>
                             <FlatList
@@ -106,6 +136,25 @@ export default function Home() {
                                 keyExtractor={(item) => item.title}
                                 horizontal={true}
                                 renderItem={({item}) => (
+                                    watchedCompletelyMap[item.title] ? null :
+                                    <MovieCard title={item.title} horizontal={true} />
+                                )}
+                                showsHorizontalScrollIndicator={false}
+                            />
+                        </View>
+                    )}
+                    {Object.values(watchedCompletelyMap).filter(Boolean).length === 0 ? null : (
+                        <View>
+                            <Text style={{...styles.header, textAlign:'left',marginLeft:10}}>
+                                <Ionicons name="refresh-circle" size={25} color={styles.link.color} />{" "}
+                                Watch Again
+                            </Text>
+                            <FlatList
+                                data={continueWatchingTitles.toReversed()}
+                                keyExtractor={(item) => item.title}
+                                horizontal={true}
+                                renderItem={({item}) => (
+                                    !watchedCompletelyMap[item.title] && !justMovies.find(value => value.title === item.title) ? null :
                                     <MovieCard title={item.title} horizontal={true} />
                                 )}
                                 showsHorizontalScrollIndicator={false}
