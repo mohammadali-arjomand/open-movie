@@ -3,7 +3,7 @@
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
 ## Installation
-You can install this project by `.apk` file from our (Telegram channel)[https://t.me/openmovieapp]
+You can install this project by `.apk` file from our [Telegram channel](https://t.me/OpenMovieApp)
 
 Or you can clone this repository and run it locally.
 
