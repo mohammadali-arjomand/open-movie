@@ -19,8 +19,19 @@ export default function Home() {
     const [showHelp, setShowHelp] = useState<boolean>(true)
 
     useEffect(() => {
-        loadRandomTitles().then(titles => {
-            setRandomTitles(titles as Movie[])
+        AsyncStorage.getItem("cached-random-titles").then(value => {
+            if (value !== null && JSON.parse(value).expiresAt > Date.now()) {
+                setRandomTitles(JSON.parse(value).titles as Movie[])
+            }
+            else {               
+                loadRandomTitles().then(titles => {
+                    setRandomTitles(titles as Movie[])
+                    AsyncStorage.setItem("cached-random-titles", JSON.stringify({
+                        titles,
+                        expiresAt: Date.now() + (24 * 60 * 60 * 1000)
+                    }))
+                })
+            }
         })
         AsyncStorage.getItem("remove-help").then(value => setShowHelp(value === null ? true : !(value as unknown as boolean)))
     }, [])
@@ -56,11 +67,7 @@ export default function Home() {
     useEffect(() => {
         const newTitles: Movie[] = []
         const newJustMovies: Movie[] = []
-        for (var title in titles) {
-            // if ("0" in titles[title]) {
-            //     delete titles[title]["0"]
-            // }
-            
+        for (let title in titles) {           
             if (!continueWatchingTitles.includes({title}) && !newTitles.includes({title}) && Object.keys(titles[title]).length > 0) {
                 newTitles.push({title})
             }
