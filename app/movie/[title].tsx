@@ -20,9 +20,12 @@ type Season = {
 type EpisodeCount = Record<number, number>
 
 export default function MovieDetailsScreen() {
-    const {title} = useLocalSearchParams();
+    const {title} = useLocalSearchParams()
     const {isBookmarked, toggleBookmark} = useBookmarks()
-    const {imageUrl, score, genres, id} = usePoster(title as string)
+
+    const [forcedToLoadData, setForcedToLoadData] = useState<boolean>(false)
+
+    const {imageUrl, score, genres, id} = usePoster(title as string, forcedToLoadData)
 
     const colors = {
         text3: useThemeColor("text3")
@@ -97,13 +100,29 @@ export default function MovieDetailsScreen() {
             padding: 3,
             margin: 2,
         },
-        modal: {backgroundColor: useThemeColor("background2"), padding: 20, margin: 20, borderRadius: 8},
+        modal: {
+            backgroundColor: useThemeColor("background2"),
+            padding: 20,
+            margin: 20,
+            borderRadius: 8
+        },
         modalTitle: {
             fontSize: 18,
             fontWeight: "bold",
             marginBottom: 12,
             color: useThemeColor("text")
         },
+        loadDataBtn: {
+            marginHorizontal: 5,
+            padding: 3,
+            marginBottom: -10,
+            backgroundColor: useThemeColor("background2"),
+            borderRadius: 7,
+        },
+        loadDataText: {
+            textAlign: "center",
+            color: useThemeColor("text")
+        }
     })
 
     const [seasons, setSeasons] = useState<Season[]>([]);
@@ -174,6 +193,10 @@ export default function MovieDetailsScreen() {
         }
     }
 
+    function forceLoadData() {
+        setForcedToLoadData(true)   
+    }
+
     return (
         <View style={styles.container}>
             <Stack.Screen options={{headerShown: false}} />
@@ -200,6 +223,15 @@ export default function MovieDetailsScreen() {
                             )
                         })}
                     </ScrollView>
+                    {genres.length === 0 ? (
+                        forcedToLoadData ? (
+                            <Text style={styles.loadDataText}>LOADING...</Text>
+                        ) : (
+                            <TouchableOpacity style={styles.loadDataBtn} onPress={forceLoadData}>
+                                <Text style={styles.loadDataText}>LOAD DATA</Text>
+                            </TouchableOpacity>
+                        )
+                    ) : null}
                 </View>
             </View>
             {Object.keys(episodeCount).length === 0 || watchedCompletely || (continueWatching && continueWatching?.season <= 1 && continueWatching?.episode <= 1) ? null : (
@@ -216,7 +248,6 @@ export default function MovieDetailsScreen() {
                         </Modal>
                     </Portal>
                 </View>
-                
             )}
             {!watchedCompletely ? null :
                 <TouchableOpacity style={styles.watchedCompletelyView} onLongPress={changeToUnwatched}>
