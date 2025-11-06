@@ -12,7 +12,7 @@ import Toast from "react-native-root-toast"
 export default function databasesSettings() {
 
     const [fullDb, setFullDb] = useState<boolean>(false)
-    const [imdb, setImdb] = useState<string>("yes")
+    const [imdb, setImdb] = useState<string>("no")
 
     activeDbName().then(dbName => setFullDb(dbName == "movies.db"))
 

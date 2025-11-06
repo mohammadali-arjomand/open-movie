@@ -12,7 +12,7 @@ export default function usePoster(name: string, force: boolean = false) {
 
     const loadData = () => {
         AsyncStorage.getItem("imdb").then(value => {
-            if (value === "no" && !force) return
+            if (value !== "yes" && !force) return
             if (!promises.has(name)) {
                 promises.set(name, extractPoster(name))
                 console.log("Loading " + name + " from IMDb ...");
